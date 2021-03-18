@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         System.out.println("start");
         System.out.println("khalid");
+        System.out.println("azhar");
     }
 
     @Override
