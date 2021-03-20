@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "128620763965",
+    "project_id": "tripremainder",
+    "storage_bucket": "tripremainder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128620763965:android:b5812b7fd2fc7690fe0354",
+        "android_client_info": {
+          "package_name": "com.example.tripremainder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128620763965-amkoj3djaf2egqtu48h3d0bns3lq80s1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tripremainder",
+            "certificate_hash": "b09f66e9f830207d97500eaf2280acc124ae1d68"
+          }
+        },
+        {
+          "client_id": "128620763965-5sn2mdneei0svhfgd6ch3o416sgffbvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrnFxq1odxY6XRWWNOKVbWgzZS2_sqIkw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128620763965-5sn2mdneei0svhfgd6ch3o416sgffbvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
