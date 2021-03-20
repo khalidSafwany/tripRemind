@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">tripRemainder</string>
+    <string name="title_activity_sign_up">Sign_upActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="E_Mail">E_Mail</string>
+    <string name="password">password</string>
+    <string name="email">E_Mail</string>
+    <string name="login">login</string>
+    <string name="create_a_new_account">create_a_new_account</string>
+    <string name="image">image</string>
+    <string name="failed">Faild</string>
+    <string name="title_activity_sign_in">sign_in_Activity</string>
 </resources>
