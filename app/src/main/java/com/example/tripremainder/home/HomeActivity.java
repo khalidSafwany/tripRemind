@@ -85,6 +85,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer, secondFragment);
+        fragmentTransaction.addToBackStack(null);
+        getSupportActionBar().setTitle("Home");
         fragmentTransaction.commit();
     }
 

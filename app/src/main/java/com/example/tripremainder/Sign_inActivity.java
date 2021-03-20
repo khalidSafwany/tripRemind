@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -59,7 +60,7 @@ public class Sign_inActivity extends AppCompatActivity {
 
         //check the current user
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(Sign_inActivity.this, MainActivity.class));
+            startActivity(new Intent(Sign_inActivity.this, HomeActivity.class));
             finish();
         }
 
@@ -119,7 +120,7 @@ public class Sign_inActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // there was an error
                                     Log.d(TAG, "signInWithEmail:success");
-                                    Intent intent = new Intent(Sign_inActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(Sign_inActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
 
@@ -139,7 +140,7 @@ public class Sign_inActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(Sign_inActivity.this, MainActivity.class));
+                    startActivity(new Intent(Sign_inActivity.this, HomeActivity.class));
                 }
 
             }
