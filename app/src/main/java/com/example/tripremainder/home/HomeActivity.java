@@ -1,11 +1,14 @@
 package com.example.tripremainder.home;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -15,18 +18,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tripremainder.R;
+import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.history.HistoryFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentItemSelectedListener,
         NavigationView.OnNavigationItemSelectedListener {
-    HomeFragment homeFragment;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     DrawerLayout drawer;
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +48,21 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.addDrawerListener(toggle);
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
-
-        homeFragment = new HomeFragment();
+        //loadFragment(new HomeFragment());
+        // fragmentManager = getSupportFragmentManager();
+       // fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.add(R.id.fragmentContainer, new HomeFragment());
+        //fragmentTransaction.commit();// add the fragment
         fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer, homeFragment);
-        fragmentTransaction.commit();// add the fragment
+        Fragment fragment;
+        fragment = fragmentManager.findFragmentByTag("myFragmentTag");
+        if (fragment == null) {
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragment =new HomeFragment();
+            fragmentTransaction.add(R.id.fragmentContainer,fragment,"myFragmentTag");
+            fragmentTransaction.commit();
+        }
+
     }
 
 
@@ -70,16 +84,34 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         closeDrawer();
         if (menuItem.getItemId() == R.id.home) {
             loadFragment(new HomeFragment());
+
             getSupportActionBar().setTitle("UpComingTrips");
 
         }
         if (menuItem.getItemId() == R.id.history) {
-            loadFragment(new HistoryFragment());
+           loadFragment(new HistoryFragment());
             getSupportActionBar().setTitle("Trips History");
 
         }
         if (menuItem.getItemId() == R.id.map) {
             getSupportActionBar().setTitle("Map");
+
+        }
+        if (menuItem.getItemId() == R.id.logout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+            builder.setTitle("LogOut Alert");
+            builder.setMessage("Are you sure to log out ??");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(HomeActivity.this, Sign_inActivity.class);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("Cancel" , null);
+            builder.create();
+            builder.show();
 
         }
         return true;
@@ -90,11 +122,16 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer, secondFragment);
         fragmentTransaction.addToBackStack(null);
-        getSupportActionBar().setTitle("Home");
         fragmentTransaction.commit();
     }
 
     private void closeDrawer() {
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getSupportActionBar().setTitle("Home");
     }
 }

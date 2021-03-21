@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.R;
 import com.example.tripremainder.home.HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -84,8 +85,8 @@ public class Sign_upActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(Sign_upActivity.this, "Authentication success.",
                                             Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(Sign_upActivity.this, HomeActivity.class);
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(Sign_upActivity.this, Home_screen.class);
+//                                    startActivity(intent);
                                     finish();
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -101,7 +102,6 @@ public class Sign_upActivity extends AppCompatActivity {
                         });
             }
         });
-
 
 
 

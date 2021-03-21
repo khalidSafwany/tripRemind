@@ -83,13 +83,12 @@
                 android:id="@+id/trip_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="144dp"
-                android:layout_marginRight="144dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/TripName"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/edit_img"
+                app:layout_constraintStart_toEndOf="@+id/trip_time"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
