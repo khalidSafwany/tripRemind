@@ -48,13 +48,21 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.addDrawerListener(toggle);
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
-        loadFragment(new HomeFragment());
-
-
-        //fragmentManager = getSupportFragmentManager();
-        //fragmentTransaction = fragmentManager.beginTransaction();
+        //loadFragment(new HomeFragment());
+        // fragmentManager = getSupportFragmentManager();
+       // fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.add(R.id.fragmentContainer, new HomeFragment());
         //fragmentTransaction.commit();// add the fragment
+        fragmentManager = getSupportFragmentManager();
+        Fragment fragment;
+        fragment = fragmentManager.findFragmentByTag("myFragmentTag");
+        if (fragment == null) {
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragment =new HomeFragment();
+            fragmentTransaction.add(R.id.fragmentContainer,fragment,"myFragmentTag");
+            fragmentTransaction.commit();
+        }
+
     }
 
     @Override
@@ -109,7 +117,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer, secondFragment);
-        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -117,6 +125,9 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.closeDrawer(GravityCompat.START);
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getSupportActionBar().setTitle("Home");
+    }
 }
