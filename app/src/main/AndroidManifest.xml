@@ -14,6 +14,9 @@
         android:theme="@style/Theme.TripRemainder">
 
 
+        <activity android:name=".home.HomeActivity" android:theme="@style/Theme.TripRemainder.NoActionBar">
+
+        </activity>
         <activity android:name=".Sign_inActivity"
             android:label="@string/title_activity_sign_in">
             <intent-filter>
