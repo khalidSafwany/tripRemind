@@ -13,8 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("start");
-        System.out.println("khalid");
+        ;
     }
 
     @Override
@@ -29,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = new Intent(MainActivity.this,AddNewTripActivity.class);
-        startActivity(intent);
+       
     }
 }
 
