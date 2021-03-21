@@ -51,6 +51,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.commit();// add the fragment
     }
 
+
+
+
+
     @Override
     public void onButtonSelected() {
         Toast.makeText(this, "Start New Activity. (Static Fragment are used)", Toast.LENGTH_SHORT).show();
