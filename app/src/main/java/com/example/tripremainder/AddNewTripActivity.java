@@ -132,6 +132,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     private void submit(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }
