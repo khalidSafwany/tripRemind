@@ -1,11 +1,19 @@
 package com.example.tripremainder.home;
 
-public class HomeList {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class HomeList implements Serializable {
     private String tripName;
     private String startPoint;
     private String endPoint;
     private String tripTime;
     private String tripDate;
+    private ArrayList<String> notes;
+
+    public  HomeList(){
+
+    }
 
     public HomeList(String tripName, String startPoint, String endPoint, String tripTime, String tripDate) {
         this.tripName = tripName;
@@ -13,6 +21,15 @@ public class HomeList {
         this.endPoint = endPoint;
         this.tripTime = tripTime;
         this.tripDate = tripDate;
+
+    }
+
+    public ArrayList<String> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ArrayList<String> notes) {
+        this.notes = notes;
     }
 
     public String getTripName() {

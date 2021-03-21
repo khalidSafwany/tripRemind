@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.InputType;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -19,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.home.HomeList;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -26,6 +28,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.*;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -43,6 +46,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     TextView timeText;
     Spinner tripTypeSpinner;
     Button addTripBtn;
+    HomeList tempHomeList;
 
 
 
@@ -132,6 +136,16 @@ public class AddNewTripActivity extends AppCompatActivity{
     private void submit(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+            tempHomeList = new HomeList();
+            tempHomeList.setTripName(tripNameEditText.getText().toString());
+            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
+            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
+            tempHomeList.setTripDate(dateText.getText().toString());
+            tempHomeList.setTripTime(timeText.getText().toString());
+            //tempHomeList.setNotes(notes);
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", (Serializable) tempHomeList);
+            setResult(200,returnIntent);
             finish();
         }
 
