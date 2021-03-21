@@ -2,6 +2,7 @@ package com.example.tripremainder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -19,5 +20,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(MainActivity.this,AddNewTripActivity.class);
+        startActivity(intent);
     }
 }
+

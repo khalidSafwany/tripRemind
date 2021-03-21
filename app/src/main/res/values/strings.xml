@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">tripRemainder</string>
+    <string name="tripNameLabelText">Trip Name</string>
+    <string name="StartPlaceText">Start Location</string>
+    <string name="EndLocationText">End Location</string>
+    <string name="Date" />
+    <string name="addBtnText">Add Trip</string>
+
+    <string-array name="tripsTypesArray">
+        <item>One way</item>
+        <item>Round trip</item>
+    </string-array>
+
+
 </resources>
