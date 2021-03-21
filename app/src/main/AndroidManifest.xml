@@ -14,10 +14,12 @@
         android:theme="@style/Theme.TripRemainder">
 
 
-        <activity android:name=".home.HomeActivity" android:theme="@style/Theme.TripRemainder.NoActionBar">
-
+        <activity
+            android:name=".home.HomeActivity"
+            android:theme="@style/Theme.TripRemainder.NoActionBar"
+            >
         </activity>
-        <activity android:name=".Sign_inActivity"
+        <activity android:name=".auth.Sign_inActivity"
             android:label="@string/title_activity_sign_in">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Sign_upActivity"
+            android:name=".auth.Sign_upActivity"
             android:label="@string/title_activity_sign_up">
 
         </activity>
