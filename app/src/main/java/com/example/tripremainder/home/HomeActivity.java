@@ -129,9 +129,4 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        getSupportActionBar().setTitle("Home");
-    }
 }

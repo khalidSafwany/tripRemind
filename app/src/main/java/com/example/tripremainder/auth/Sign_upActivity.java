@@ -1,4 +1,4 @@
-package com.example.tripremainder;
+package com.example.tripremainder.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tripremainder.R;
+import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.home.HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

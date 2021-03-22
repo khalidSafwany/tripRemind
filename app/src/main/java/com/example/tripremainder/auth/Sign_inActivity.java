@@ -61,7 +61,7 @@ public class Sign_inActivity extends AppCompatActivity {
 
         //check the current user
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(Sign_inActivity.this, HomeActivity.class));
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             finish();
         }
 
@@ -205,5 +205,4 @@ public class Sign_inActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
