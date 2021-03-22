@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 public class HomeFragment extends Fragment {
     private OnFragmentItemSelectedListener listener;
     private FloatingActionButton floatButtonAction;
@@ -56,7 +58,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 200) {
+        if (requestCode == 200 && resultCode == 200) {
 
 
                 HomeList result= (HomeList) data.getSerializableExtra("result");
