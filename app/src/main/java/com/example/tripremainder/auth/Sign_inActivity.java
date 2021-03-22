@@ -61,7 +61,7 @@ public class Sign_inActivity extends AppCompatActivity {
 
         //check the current user
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            startActivity(new Intent(Sign_inActivity.this, HomeActivity.class));
             finish();
         }
 
@@ -204,5 +204,11 @@ public class Sign_inActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
     }
 }

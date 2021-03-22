@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddNewTripActivity">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/tripNameLabelText"
+        app:boxStrokeColor="@color/purple_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/TripNameTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/StartPlaceText"
+        app:boxStrokeColor="@color/purple_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/outlinedTextField"
+        app:startIconDrawable="@drawable/ic_baseline_add_location_24"
+        tools:ignore="MissingConstraints">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/startPlaceTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField3"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/EndLocationText"
+        app:boxStrokeColor="@color/purple_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/outlinedTextField2"
+        app:startIconDrawable="@drawable/ic_baseline_add_location_24"
+        tools:ignore="MissingConstraints">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/endLocationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconDrawable="@drawable/ic_baseline_add_location_24" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/calenderButton"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/white"
+        android:foregroundTint="@color/purple_500"
+        android:tint="@color/purple_500"
+        app:layout_constraintStart_toStartOf="@+id/outlinedTextField3"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3"
+
+        app:srcCompat="@drawable/ic_baseline_calendar_today_24" />
+
+    <TextView
+        android:id="@+id/DateTextView"
+        android:layout_width="74dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/Date"
+        app:layout_constraintEnd_toEndOf="@+id/calenderButton"
+        app:layout_constraintStart_toStartOf="@+id/calenderButton"
+        app:layout_constraintTop_toBottomOf="@+id/calenderButton" />
+
+    <ImageButton
+        android:id="@+id/timeButton"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/outlinedTextField3"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3"
+        app:srcCompat="@drawable/ic_baseline_watch_later_24" />
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="74dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/DateTextView"
+        app:layout_constraintEnd_toEndOf="@+id/timeButton"
+        app:layout_constraintStart_toStartOf="@+id/timeButton"
+        app:layout_constraintTop_toBottomOf="@+id/timeButton" />
+
+    <Spinner
+        android:id="@+id/tripTypeSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/timeButton"
+        app:layout_constraintStart_toEndOf="@+id/calenderButton"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3" />
+
+    <ImageButton
+        android:id="@+id/addNotesButton"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/design_default_color_background"
+        app:layout_constraintStart_toStartOf="@+id/calenderButton"
+        app:layout_constraintTop_toBottomOf="@+id/DateTextView"
+        app:srcCompat="@drawable/ic_baseline_note_add_24" />
+
+    <Button
+        android:id="@+id/addTripButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/addBtnText"
+        android:background="@drawable/rounded_corner"
+        app:layout_constraintEnd_toEndOf="@+id/timeText"
+        app:layout_constraintTop_toBottomOf="@+id/addNotesButton" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

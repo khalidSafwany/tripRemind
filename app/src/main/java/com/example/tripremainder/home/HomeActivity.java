@@ -31,6 +31,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
+    boolean isSecondryFragmentsActive;
 
 
     @Override
@@ -42,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         getSupportActionBar().setTitle("Home");
         navigationView = findViewById(R.id.nested);
         navigationView.setNavigationItemSelectedListener(this);
+        isSecondryFragmentsActive = false;
 
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
@@ -82,19 +84,23 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         closeDrawer();
+
         if (menuItem.getItemId() == R.id.home) {
             loadFragment(new HomeFragment());
 
             getSupportActionBar().setTitle("UpComingTrips");
+            isSecondryFragmentsActive = false;
 
         }
         if (menuItem.getItemId() == R.id.history) {
            loadFragment(new HistoryFragment());
             getSupportActionBar().setTitle("Trips History");
+            isSecondryFragmentsActive = true;
 
         }
         if (menuItem.getItemId() == R.id.map) {
             getSupportActionBar().setTitle("Map");
+            isSecondryFragmentsActive = true;
 
         }
         if (menuItem.getItemId() == R.id.logout) {
@@ -129,4 +135,21 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.closeDrawer(GravityCompat.START);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout layout = (DrawerLayout)findViewById(R.id.drawer);
+        if (layout.isDrawerOpen(GravityCompat.START)) {
+            layout.closeDrawer(GravityCompat.START);
+        } else {
+            if(!isSecondryFragmentsActive){
+                finishAffinity();
+            }
+            else{
+                isSecondryFragmentsActive = false;
+            }
+            super.onBackPressed();
+            getSupportActionBar().setTitle("Home");
+        }
+
+    }
 }
