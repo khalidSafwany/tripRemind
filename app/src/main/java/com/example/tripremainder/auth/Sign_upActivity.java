@@ -64,12 +64,17 @@ public class Sign_upActivity extends AppCompatActivity {
                 String password = passwordcheck.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
+                    email_id.setError("Enter your Mail");
                     Toast.makeText(getApplicationContext(), "Enter your Eamil", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
+                    passwordcheck.setError("Enter your password");
                     Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                if(passwordcheck.getText().length() < 6){
+                    passwordcheck.setError("password should be at least six character");
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
