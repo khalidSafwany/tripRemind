@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.home.HomeActivity;
@@ -86,6 +87,8 @@ public class Sign_upActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(Sign_upActivity.this, "Authentication success.",
                                             Toast.LENGTH_SHORT).show();
+                                    FIreBaseConnection connection = new FIreBaseConnection();
+                                    connection.createNewUser(email_id.getText().toString());
 //                                    Intent intent = new Intent(Sign_upActivity.this, Home_screen.class);
 //                                    startActivity(intent);
                                     finish();

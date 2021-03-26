@@ -58,6 +58,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     String tripType;
     ArrayList<String>notes;
     PlacesClient placesClient;
+    FIreBaseConnection connection;
 
 
 
@@ -71,6 +72,8 @@ public class AddNewTripActivity extends AppCompatActivity{
 
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
+        connection = new FIreBaseConnection();
+
 
 
     }
@@ -142,7 +145,11 @@ public class AddNewTripActivity extends AppCompatActivity{
             tempHomeList.setEndPoint(endLocationEditText.getText().toString());
             tempHomeList.setTripDate(dateText.getText().toString());
             tempHomeList.setTripTime(timeText.getText().toString());
-            //tempHomeList.setNotes(notes);
+            tempHomeList.setNotes(notes);
+
+            connection.addNewTrip(tempHomeList);
+            //connection.deleteTrip();
+            //connection.updateTrip(tempHomeList,"first");
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempHomeList);
             setResult(200,returnIntent);
