@@ -18,6 +18,7 @@ import com.example.tripremainder.AddNewTripActivity;
 import com.example.tripremainder.R;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.notes.AddNote;
 
 import java.util.List;
 
@@ -109,6 +110,13 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 intent.putExtra("trip_date" , trip.getTripDate());
                 intent.putExtra("trip_time" , trip.getTripTime());
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                context.startActivity(intent);
+            }
+        });
+        holder.AddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, AddNote.class);
                 context.startActivity(intent);
             }
         });

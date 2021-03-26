@@ -17,6 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public TextView tripTime;
     public TextView tripDate;
     public Button startBtn;
+    public Button AddBtn;
     public ConstraintLayout constraintLayout;
     public ImageView deleteTrip , updateTrip;
 
@@ -28,8 +29,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         tripTime = itemView.findViewById(R.id.trip_time);
         tripDate = itemView.findViewById(R.id.trip_date);
         startBtn = itemView.findViewById(R.id.start_btn);
+        AddBtn=itemView.findViewById(R.id.addnote_btn);
         deleteTrip = itemView.findViewById(R.id.delete_trip);
         updateTrip = itemView.findViewById(R.id.edit_img);
+
 
         constraintLayout = itemView.findViewById(R.id.homeConstraint);
     }
