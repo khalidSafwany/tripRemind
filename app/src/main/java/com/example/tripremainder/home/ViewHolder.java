@@ -19,7 +19,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public Button startBtn;
     public Button AddBtn;
     public ConstraintLayout constraintLayout;
-    public ImageView deleteTrip , updateTrip;
+    public ImageView deleteTrip , updateTrip,notestrip;
 
     public ViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +32,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         AddBtn=itemView.findViewById(R.id.addnote_btn);
         deleteTrip = itemView.findViewById(R.id.delete_trip);
         updateTrip = itemView.findViewById(R.id.edit_img);
+        notestrip=itemView.findViewById(R.id.notes_img);
 
 
         constraintLayout = itemView.findViewById(R.id.homeConstraint);

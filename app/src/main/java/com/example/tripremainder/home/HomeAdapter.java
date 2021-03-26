@@ -1,6 +1,7 @@
 package com.example.tripremainder.home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -119,6 +121,27 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(context, AddNote.class);
                 context.startActivity(intent);
+            }
+        });
+        holder.notestrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                ViewGroup viewGroup = view.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.notesdialog, viewGroup, false);
+                builder.setView(dialogView);
+                final Button btnClose = dialogView.findViewById(R.id.buttonClose);
+
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setCancelable(false);
+                btnClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
             }
         });
     }
