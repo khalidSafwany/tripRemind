@@ -1,6 +1,7 @@
 package com.example.tripremainder.history;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -15,6 +16,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
     public TextView tripTime;
     public TextView tripDate;
     public TextView status;
+    public ImageView delete;
 
     public ConstraintLayout constraintLayout;
 
@@ -26,6 +28,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder {
         tripTime = itemView.findViewById(R.id.trip_time);
         tripDate = itemView.findViewById(R.id.trip_date);
         status = itemView.findViewById(R.id.status);
+        delete = itemView.findViewById(R.id.delete_trip);
         constraintLayout = itemView.findViewById(R.id.homeConstraint);
     }
 }

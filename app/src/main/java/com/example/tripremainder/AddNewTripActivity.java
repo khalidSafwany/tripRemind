@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -20,6 +23,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.home.HomeAdapter;
 import com.example.tripremainder.home.HomeList;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -36,7 +42,7 @@ import java.util.List;
 
 public class AddNewTripActivity extends AppCompatActivity{
 
-    EditText tripNameEditText;
+    static EditText tripNameEditText;
     EditText startLocationEditText;
     EditText endLocationEditText;
     ImageButton calenderButton;
@@ -46,7 +52,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     TextView timeText;
     Spinner tripTypeSpinner;
     Button addTripBtn;
-    HomeList tempHomeList;
+    NewTrip tempHomeList;
 
 
 
@@ -58,6 +64,11 @@ public class AddNewTripActivity extends AppCompatActivity{
     String tripType;
     ArrayList<String>notes;
     PlacesClient placesClient;
+
+
+    RoomDB database;
+    List<NewTrip> dataList = new ArrayList<>();
+    private HomeAdapter adapter;
 
 
 
@@ -72,6 +83,19 @@ public class AddNewTripActivity extends AppCompatActivity{
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
 
+
+        //Hager code
+        database = RoomDB.getInstance(this);
+        dataList = database.tripDaos().getUpcomingTrips();
+
+
+        Intent intent = getIntent();
+        tripNameEditText.setText(intent.getStringExtra("trip_name"));
+        startLocationEditText.setText(intent.getStringExtra("trip_start_point"));
+        endLocationEditText.setText(intent.getStringExtra("trip_end_point"));
+        dateText.setText(intent.getStringExtra("trip_date"));
+        timeText.setText(intent.getStringExtra("trip_time"));
+        ////////////////
 
     }
 
@@ -133,16 +157,20 @@ public class AddNewTripActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    // Hager code
+
     private void submit(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-            tempHomeList = new HomeList();
-            tempHomeList.setTripName(tripNameEditText.getText().toString());
-            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
-            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
-            tempHomeList.setTripDate(dateText.getText().toString());
-            tempHomeList.setTripTime(timeText.getText().toString());
-            //tempHomeList.setNotes(notes);
+            tempHomeList = new NewTrip();
+            tempHomeList.setState(0);
+            tempHomeList.setTripName(tripNameEditText.getText().toString().trim());
+            tempHomeList.setStartPoint(startLocationEditText.getText().toString().trim());
+            tempHomeList.setEndPoint(endLocationEditText.getText().toString().trim());
+            tempHomeList.setTripDate(dateText.getText().toString().trim());
+            tempHomeList.setTripTime(timeText.getText().toString().trim());
+
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempHomeList);
             setResult(200,returnIntent);
@@ -150,6 +178,27 @@ public class AddNewTripActivity extends AppCompatActivity{
         }
 
     }
+
+    ///////////////////////////////////
+
+
+//    private void submit(){
+//        if(validate()){
+//            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+//            tempHomeList = new HomeList();
+//            tempHomeList.setTripName(tripNameEditText.getText().toString());
+//            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
+//            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
+//            tempHomeList.setTripDate(dateText.getText().toString());
+//            tempHomeList.setTripTime(timeText.getText().toString());
+//            //tempHomeList.setNotes(notes);
+//            Intent returnIntent = new Intent();
+//            returnIntent.putExtra("result", (Serializable) tempHomeList);
+//            setResult(200,returnIntent);
+//            finish();
+//        }
+//
+//    }
 
     private boolean validate(){
         if(!tripNameEditText.getText().toString().matches("")){
