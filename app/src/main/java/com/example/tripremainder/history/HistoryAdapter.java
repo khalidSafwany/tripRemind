@@ -1,5 +1,6 @@
 package com.example.tripremainder.history;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,18 +11,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.R;
+
+import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
     private final Context context;
-    private HistoryList[] listdata;
+    private List<NewTrip>tripList;
+    private RoomDB database;
+    private Activity con;
     private static final String TAG = "RecyclerView";
 
     // RecyclerView recyclerView;
-    public HistoryAdapter(Context context, HistoryList[] listdata) {
+    public HistoryAdapter(Context context, List<NewTrip> listdata) {
         this.context = context;
-        this.listdata = listdata;
+        this.tripList = listdata;
     }
 
 
@@ -37,23 +44,41 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-        holder.tripName.setText(listdata[position].getTripName());
-        holder.startPoint.setText(listdata[position].getStartPoint());
-        holder.endPoint.setText(listdata[position].getEndPoint());
-        holder.tripTime.setText(listdata[position].getTripTime());
-        holder.tripDate.setText(listdata[position].getTripDate());
-        holder.status.setText(listdata[position].getStatus());
+
+        database = RoomDB.getInstance(con);
+
+        holder.tripName.setText(tripList.get(position).getTripName());
+        holder.startPoint.setText(tripList.get(position).getStartPoint());
+        holder.endPoint.setText(tripList.get(position).getEndPoint());
+        holder.tripTime.setText(tripList.get(position).getTripTime());
+        holder.tripDate.setText(tripList.get(position).getTripDate());
+       // holder.status.setText(listdata[position].getStatus());
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "click on item: " + listdata[position].getTripName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "click on item: " + tripList.get(position).getTripName(), Toast.LENGTH_SHORT).show();
             }
         });
         Log.i(TAG, "onBindViewHolder:");
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewTrip trip = tripList.get(holder.getAdapterPosition());
+                database.tripDaos().delete(trip);
+                int postion = holder.getAdapterPosition();
+                tripList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,tripList.size());
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
-        return listdata.length;
+        System.out.println("list size = "+tripList.size());
+        return tripList.size();
     }
 }

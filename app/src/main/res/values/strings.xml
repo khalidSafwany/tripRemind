@@ -42,6 +42,11 @@
     <string name="Date" />
     <string name="addBtnText">Add Trip</string>
     <string name="saveBtnText">Save</string>
+    <string name="Close">Close</string>
+    <string name="Notes">Notes</string>
+    <string name="EnterNote">Enter Note</string>
+    <string name="Add">Add</string>
+    <string name="Save">Save</string>
 
     <string-array name="tripsTypesArray">
         <item>One way</item>

@@ -132,25 +132,18 @@
         app:layout_constraintStart_toEndOf="@+id/calenderButton"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3" />
 
-    <ImageButton
-        android:id="@+id/addNotesButton"
-        android:layout_width="85dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/design_default_color_background"
-        app:layout_constraintStart_toStartOf="@+id/calenderButton"
-        app:layout_constraintTop_toBottomOf="@+id/DateTextView"
-        app:srcCompat="@drawable/ic_baseline_note_add_24" />
+
 
     <Button
         android:id="@+id/addTripButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/addBtnText"
         android:background="@drawable/rounded_corner"
+        android:text="@string/addBtnText"
+        android:layout_marginTop="90dp"
         app:layout_constraintEnd_toEndOf="@+id/timeText"
-        app:layout_constraintTop_toBottomOf="@+id/addNotesButton" />
+        app:layout_constraintTop_toBottomOf="@id/timeText"
+         />
 
     <Button
         android:id="@+id/saveBtn"

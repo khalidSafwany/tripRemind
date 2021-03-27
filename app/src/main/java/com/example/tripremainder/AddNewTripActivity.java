@@ -3,15 +3,21 @@ package com.example.tripremainder;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -21,7 +27,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.home.HomeAdapter;
 import com.example.tripremainder.home.HomeList;
+import com.example.tripremainder.notification.AlarmBrodcast;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -30,14 +40,18 @@ import com.google.android.libraries.places.widget.*;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class AddNewTripActivity extends AppCompatActivity{
 
-    EditText tripNameEditText;
+    static EditText tripNameEditText;
     EditText startLocationEditText;
     EditText endLocationEditText;
     ImageButton calenderButton;
@@ -64,6 +78,13 @@ public class AddNewTripActivity extends AppCompatActivity{
     FIreBaseConnection connection;
 
 
+    RoomDB database;
+    List<NewTrip> dataList = new ArrayList<>();
+    private HomeAdapter adapter;
+    public static final int Notification_id = 1;
+    String timeTonotify;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +99,19 @@ public class AddNewTripActivity extends AppCompatActivity{
         connection = new FIreBaseConnection();
 
 
+
+        //Hager code
+        database = RoomDB.getInstance(this);
+        dataList = database.tripDaos().getUpcomingTrips();
+
+
+        Intent intent = getIntent();
+        tripNameEditText.setText(intent.getStringExtra("trip_name"));
+        startLocationEditText.setText(intent.getStringExtra("trip_start_point"));
+        endLocationEditText.setText(intent.getStringExtra("trip_end_point"));
+        dateText.setText(intent.getStringExtra("trip_date"));
+        timeText.setText(intent.getStringExtra("trip_time"));
+        ////////////////
 
     }
 
@@ -108,12 +142,12 @@ public class AddNewTripActivity extends AppCompatActivity{
                 R.array.tripsTypesArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tripTypeSpinner.setAdapter(adapter);
-
+/*
         addNoteBtn = findViewById(R.id.addNotesButton);
         addNoteBtn.setOnClickListener(v->{
             showAddNoteDialogue();
         });
-
+*/
         startLocationEditText.setOnClickListener(v->{
             showPlacesAssistant();
         });
@@ -193,6 +227,9 @@ public class AddNewTripActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    // Hager code
+
     private void submit(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
@@ -207,13 +244,52 @@ public class AddNewTripActivity extends AppCompatActivity{
             connection.addNewTrip(tempHomeList);
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
+            tempHomeList = new NewTrip();
+            Intent intent = getIntent();
+            tempHomeList.setId(intent.getIntExtra("id" , 0));
+            tempHomeList.setState(0);
+            tempHomeList.setTripName(tripNameEditText.getText().toString().trim());
+            tempHomeList.setStartPoint(startLocationEditText.getText().toString().trim());
+            tempHomeList.setEndPoint(endLocationEditText.getText().toString().trim());
+            tempHomeList.setTripDate(dateText.getText().toString().trim());
+            tempHomeList.setTripTime(timeText.getText().toString().trim());
+            displayAlert();
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempHomeList);
+//            database.tripDaos().updateTrip(tempHomeList.getTripName() , tempHomeList.getStartPoint() , tempHomeList.getEndPoint()
+//            , tempHomeList.getTripDate() , tempHomeList.getTripTime() , tempHomeList.getId());
+            database.tripDaos().updateTripName(tempHomeList.getId() , tempHomeList.getTripName());
+            database.tripDaos().updateTripStartPoint(tempHomeList.getId() , tempHomeList.getStartPoint());
+            database.tripDaos().updateTripEndPoint(tempHomeList.getId() , tempHomeList.getEndPoint());
+            database.tripDaos().updateTripDate(tempHomeList.getId() , tempHomeList.getTripDate());
+            database.tripDaos().updateTripTime(tempHomeList.getId() , tempHomeList.getTripTime());
+
             setResult(200,returnIntent);
-            finish();
+            //finish();
         }
 
     }
+
+    ///////////////////////////////////
+
+
+//    private void submit(){
+//        if(validate()){
+//            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+//            tempHomeList = new HomeList();
+//            tempHomeList.setTripName(tripNameEditText.getText().toString());
+//            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
+//            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
+//            tempHomeList.setTripDate(dateText.getText().toString());
+//            tempHomeList.setTripTime(timeText.getText().toString());
+//            //tempHomeList.setNotes(notes);
+//            Intent returnIntent = new Intent();
+//            returnIntent.putExtra("result", (Serializable) tempHomeList);
+//            setResult(200,returnIntent);
+//            finish();
+//        }
+//
+//    }
 
     private boolean validate(){
         if(!tripNameEditText.getText().toString().matches("")){
@@ -312,6 +388,73 @@ public class AddNewTripActivity extends AppCompatActivity{
         });
 
         builder.show();
+    }
+
+    */
+
+    public void setAlarm(String tripName, String date, String time, String endLocation) {
+
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), AlarmBrodcast.class);
+
+        intent.putExtra("event", tripName);
+        intent.putExtra("end", endLocation);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        String dateandtime = date + " " + timeTonotify;
+
+        DateFormat formatter = new SimpleDateFormat("d-M-yyyy hh:mm");
+        try {
+            Date date1 = formatter.parse(dateandtime);
+            am.set(AlarmManager.RTC_WAKEUP, date1.getTime(), pendingIntent);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        finish();
+
+    }
+
+    public void displayAlert() {
+        // AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        // Intent intent = new Intent(getApplicationContext(), AlarmBrodcast.class);
+        // PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //String dateandtime = date + " " + timeTonotify;
+        //am.set(AlarmManager.RTC_WAKEUP, date1.getTime(), pendingIntent);
+        String value = (tripNameEditText.getText().toString().trim());
+        String Sdate = (dateText.getText().toString().trim());
+        String Stime = (timeText.getText().toString().trim());
+        String endpoint = (endLocationEditText.getText().toString().trim());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddNewTripActivity.this);
+        builder.setCancelable(false);
+        builder.setTitle("Trip Remind");
+        builder.setMessage(value);
+        // add the buttons
+        builder.setIcon(R.drawable.ic_baseline_calendar_today_24);
+        builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+endpoint);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+        builder.setNeutralButton("Snooze", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                setAlarm(value, Sdate, Stime, endpoint);
+
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

@@ -99,14 +99,18 @@ public class Sign_inActivity extends AppCompatActivity {
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
                 if (TextUtils.isEmpty(email)) {
+                    inputEmail.setError("Enter your Mail");
                     Toast.makeText(getApplicationContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
+                    inputPassword.setError("Enter your password");
                     Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                if(inputPassword.getText().length() < 6){
+                    inputPassword.setError("password should be at least six character");
+                }
                 progressBar.setVisibility(View.VISIBLE);
 
 
