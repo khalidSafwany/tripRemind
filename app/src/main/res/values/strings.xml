@@ -41,6 +41,7 @@
     <string name="EndLocationText">End Location</string>
     <string name="Date" />
     <string name="addBtnText">Add Trip</string>
+    <string name="saveBtnText">Save</string>
 
     <string-array name="tripsTypesArray">
         <item>One way</item>

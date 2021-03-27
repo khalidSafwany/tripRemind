@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -46,7 +47,9 @@ public class AddNewTripActivity extends AppCompatActivity{
     TextView timeText;
     Spinner tripTypeSpinner;
     Button addTripBtn;
+    Button saveTripBtn;
     HomeList tempHomeList;
+    HomeList tripToBeUpdated;
 
 
 
@@ -94,8 +97,12 @@ public class AddNewTripActivity extends AppCompatActivity{
         timeText = findViewById(R.id.timeText);
         tripTypeSpinner = findViewById(R.id.tripTypeSpinner);
         addTripBtn = findViewById(R.id.addTripButton);
+        saveTripBtn = findViewById(R.id.saveBtn);
 
-        addTripBtn.setOnClickListener(v->submit());
+//check if view is for update or for new trip
+        checkForUpdateOrNewTrip();
+
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.tripsTypesArray, android.R.layout.simple_spinner_item);
@@ -110,6 +117,56 @@ public class AddNewTripActivity extends AppCompatActivity{
         startLocationEditText.setOnClickListener(v->{
             showPlacesAssistant();
         });
+    }
+
+
+    private void checkForUpdateOrNewTrip(){
+        tripToBeUpdated = (HomeList) getIntent().getSerializableExtra("UpdatedTrip");
+        if(tripToBeUpdated == null) {
+            saveTripBtn.setVisibility(View.INVISIBLE);
+            saveTripBtn.setEnabled(false);
+            addTripBtn.setOnClickListener(v->submit());
+        }
+        else{
+            setUpdateView();
+            saveTripBtn.setOnClickListener(v->submitAndUpdate());
+        }
+    }
+
+
+
+    private void submitAndUpdate(){
+        if(validate()){
+            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+            tempHomeList = new HomeList();
+            tempHomeList.setTripName(tripNameEditText.getText().toString());
+            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
+            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
+            tempHomeList.setTripDate(dateText.getText().toString());
+            tempHomeList.setTripTime(timeText.getText().toString());
+            tempHomeList.setNotes(notes);
+
+            connection.updateTrip(tempHomeList);
+            //connection.deleteTrip();
+            //connection.updateTrip(tempHomeList,"first");
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", (Serializable) tempHomeList);
+            setResult(200,returnIntent);
+            finish();
+        }
+
+    }
+
+
+    private  void setUpdateView(){
+        addTripBtn.setVisibility(View.INVISIBLE);
+        addTripBtn.setEnabled(false);
+        tripNameEditText.setText(tripToBeUpdated.getTripName());
+        startLocationEditText.setText(tripToBeUpdated.getStartPoint());
+        endLocationEditText.setText(tripToBeUpdated.getEndPoint());
+        timeText.setText(tripToBeUpdated.getTripTime());
+        dateText.setText(tripToBeUpdated.getTripDate());
+        notes = tripToBeUpdated.getNotes();
     }
 
 
