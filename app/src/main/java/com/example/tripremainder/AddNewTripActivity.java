@@ -164,6 +164,8 @@ public class AddNewTripActivity extends AppCompatActivity{
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
             tempHomeList = new NewTrip();
+            Intent intent = getIntent();
+            tempHomeList.setId(intent.getIntExtra("id" , 0));
             tempHomeList.setState(0);
             tempHomeList.setTripName(tripNameEditText.getText().toString().trim());
             tempHomeList.setStartPoint(startLocationEditText.getText().toString().trim());
@@ -173,6 +175,14 @@ public class AddNewTripActivity extends AppCompatActivity{
 
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempHomeList);
+//            database.tripDaos().updateTrip(tempHomeList.getTripName() , tempHomeList.getStartPoint() , tempHomeList.getEndPoint()
+//            , tempHomeList.getTripDate() , tempHomeList.getTripTime() , tempHomeList.getId());
+            database.tripDaos().updateTripName(tempHomeList.getId() , tempHomeList.getTripName());
+            database.tripDaos().updateTripStartPoint(tempHomeList.getId() , tempHomeList.getStartPoint());
+            database.tripDaos().updateTripEndPoint(tempHomeList.getId() , tempHomeList.getEndPoint());
+            database.tripDaos().updateTripDate(tempHomeList.getId() , tempHomeList.getTripDate());
+            database.tripDaos().updateTripTime(tempHomeList.getId() , tempHomeList.getTripTime());
+
             setResult(200,returnIntent);
             finish();
         }

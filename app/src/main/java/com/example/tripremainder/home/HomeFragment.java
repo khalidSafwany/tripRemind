@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
 
         tripList = new ArrayList<>();
         database = RoomDB.getInstance(getContext());
-        tripList = database.tripDaos().getUpcomingTrips();
+        //tripList = database.tripDaos().getUpcomingTrips();
 
         adapter = new HomeAdapter(getContext(),tripList);
         recyclerView.setAdapter(adapter);
@@ -74,6 +74,7 @@ public class HomeFragment extends Fragment {
 
 
         }
+
     }
 
     @Override
@@ -87,6 +88,15 @@ public class HomeFragment extends Fragment {
             throw new ClassCastException(context.toString() + " must implement listener");
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        tripList.clear();
+        tripList.addAll(database.tripDaos().getUpcomingTrips());
+        adapter.notifyDataSetChanged();
     }
 
     public interface  OnFragmentItemSelectedListener{

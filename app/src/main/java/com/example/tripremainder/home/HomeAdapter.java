@@ -101,8 +101,9 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.updateTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewTrip trip = tripList.get(holder.getAdapterPosition());
+                NewTrip trip = tripList.get(position);
                 Intent intent = new Intent(context , AddNewTripActivity.class);
+                intent.putExtra("id" , trip.getId());
                 intent.putExtra("trip_name" , trip.getTripName());
                 intent.putExtra("trip_start_point" ,trip.getStartPoint());
                 intent.putExtra("trip_end_point" ,trip.getEndPoint());
