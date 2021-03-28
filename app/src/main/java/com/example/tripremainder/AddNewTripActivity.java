@@ -8,18 +8,14 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
-import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,7 +26,6 @@ import android.widget.Toast;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.home.HomeAdapter;
-import com.example.tripremainder.home.HomeList;
 import com.example.tripremainder.notification.AlarmBrodcast;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -49,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 public class AddNewTripActivity extends AppCompatActivity{
 
     static EditText tripNameEditText;
@@ -62,24 +58,18 @@ public class AddNewTripActivity extends AppCompatActivity{
     Spinner tripTypeSpinner;
     Button addTripBtn;
     Button saveTripBtn;
-    HomeList tempHomeList;
-    HomeList tripToBeUpdated;
+    NewTrip tempNewTrip;
+    NewTrip tripToBeUpdated;
 
 
 
-    String tripName;
-    String startLocation;
-    String endLocation;
-    String date;
-    String time;
-    String tripType;
     ArrayList<String>notes;
     PlacesClient placesClient;
     FIreBaseConnection connection;
 
 
     RoomDB database;
-    List<NewTrip> dataList = new ArrayList<>();
+    List<com.example.tripremainder.DataBase.Model.NewTrip> dataList = new ArrayList<>();
     private HomeAdapter adapter;
     public static final int Notification_id = 1;
     String timeTonotify;
@@ -155,7 +145,7 @@ public class AddNewTripActivity extends AppCompatActivity{
 
 
     private void checkForUpdateOrNewTrip(){
-        tripToBeUpdated = (HomeList) getIntent().getSerializableExtra("UpdatedTrip");
+        tripToBeUpdated = (NewTrip) getIntent().getSerializableExtra("UpdatedTrip");
         if(tripToBeUpdated == null) {
             saveTripBtn.setVisibility(View.INVISIBLE);
             saveTripBtn.setEnabled(false);
@@ -172,35 +162,42 @@ public class AddNewTripActivity extends AppCompatActivity{
     private void submitAndUpdate(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-            tempHomeList = new HomeList();
-            tempHomeList.setTripName(tripNameEditText.getText().toString());
-            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
-            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
-            tempHomeList.setTripDate(dateText.getText().toString());
-            tempHomeList.setTripTime(timeText.getText().toString());
-            tempHomeList.setNotes(notes);
+            tripToBeUpdated.setTripName(tripNameEditText.getText().toString());
+            tripToBeUpdated.setStartPoint(startLocationEditText.getText().toString());
+            tripToBeUpdated.setEndPoint(endLocationEditText.getText().toString());
+            tripToBeUpdated.setTripDate(dateText.getText().toString());
+            tripToBeUpdated.setTripTime(timeText.getText().toString());
+            //tempNewTrip.setNotes(notes);
 
-            connection.updateTrip(tempHomeList);
-            //connection.deleteTrip();
-            //connection.updateTrip(tempHomeList,"first");
+            database.tripDaos().updateTripName(tripToBeUpdated.getId() , tripToBeUpdated.getTripName());
+            database.tripDaos().updateTripStartPoint(tripToBeUpdated.getId() , tripToBeUpdated.getStartPoint());
+            database.tripDaos().updateTripEndPoint(tripToBeUpdated.getId() , tripToBeUpdated.getEndPoint());
+            database.tripDaos().updateTripDate(tripToBeUpdated.getId() , tripToBeUpdated.getTripDate());
+            database.tripDaos().updateTripTime(tripToBeUpdated.getId() , tripToBeUpdated.getTripTime());
+            connection.updateTrip(tripToBeUpdated);
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("result", (Serializable) tempHomeList);
+            returnIntent.putExtra("result", tripToBeUpdated);
             setResult(200,returnIntent);
             finish();
         }
 
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        setUpdateView();
+//    }
 
     private  void setUpdateView(){
         addTripBtn.setVisibility(View.INVISIBLE);
         addTripBtn.setEnabled(false);
-        tripNameEditText.setText(tripToBeUpdated.getTripName());
+        tripNameEditText.setText("iioiiiiiiii");
         startLocationEditText.setText(tripToBeUpdated.getStartPoint());
         endLocationEditText.setText(tripToBeUpdated.getEndPoint());
         timeText.setText(tripToBeUpdated.getTripTime());
         dateText.setText(tripToBeUpdated.getTripDate());
-        notes = tripToBeUpdated.getNotes();
+        //notes = tripToBeUpdated.getNotes();
     }
 
 
@@ -233,36 +230,39 @@ public class AddNewTripActivity extends AppCompatActivity{
     private void submit(){
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-            tempHomeList = new HomeList();
-            tempHomeList.setTripName(tripNameEditText.getText().toString());
-            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
-            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
-            tempHomeList.setTripDate(dateText.getText().toString());
-            tempHomeList.setTripTime(timeText.getText().toString());
-            tempHomeList.setNotes(notes);
+            tempNewTrip = new NewTrip();
+            tempNewTrip.setTripName(tripNameEditText.getText().toString());
+            tempNewTrip.setStartPoint(startLocationEditText.getText().toString());
+            tempNewTrip.setEndPoint(endLocationEditText.getText().toString());
+            tempNewTrip.setTripDate(dateText.getText().toString());
+            tempNewTrip.setTripTime(timeText.getText().toString());
+           // tempNewTrip.setNotes(notes);
 
-            connection.addNewTrip(tempHomeList);
+            //
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
-            tempHomeList = new NewTrip();
+            tempNewTrip = new NewTrip();
             Intent intent = getIntent();
-            tempHomeList.setId(intent.getIntExtra("id" , 0));
-            tempHomeList.setState(0);
-            tempHomeList.setTripName(tripNameEditText.getText().toString().trim());
-            tempHomeList.setStartPoint(startLocationEditText.getText().toString().trim());
-            tempHomeList.setEndPoint(endLocationEditText.getText().toString().trim());
-            tempHomeList.setTripDate(dateText.getText().toString().trim());
-            tempHomeList.setTripTime(timeText.getText().toString().trim());
+            tempNewTrip.setId(intent.getIntExtra("id" , 0));
+            tempNewTrip.setState(0);
+            tempNewTrip.setTripName(tripNameEditText.getText().toString().trim());
+            tempNewTrip.setStartPoint(startLocationEditText.getText().toString().trim());
+            tempNewTrip.setEndPoint(endLocationEditText.getText().toString().trim());
+            tempNewTrip.setTripDate(dateText.getText().toString().trim());
+            tempNewTrip.setTripTime(timeText.getText().toString().trim());
+            long id = database.tripDaos().insertTrip(tempNewTrip);
+            tempNewTrip.setId((int)id);
+            connection.addNewTrip(tempNewTrip);
             displayAlert();
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("result", (Serializable) tempHomeList);
+            returnIntent.putExtra("result", (Serializable) tempNewTrip);
 //            database.tripDaos().updateTrip(tempHomeList.getTripName() , tempHomeList.getStartPoint() , tempHomeList.getEndPoint()
 //            , tempHomeList.getTripDate() , tempHomeList.getTripTime() , tempHomeList.getId());
-            database.tripDaos().updateTripName(tempHomeList.getId() , tempHomeList.getTripName());
-            database.tripDaos().updateTripStartPoint(tempHomeList.getId() , tempHomeList.getStartPoint());
-            database.tripDaos().updateTripEndPoint(tempHomeList.getId() , tempHomeList.getEndPoint());
-            database.tripDaos().updateTripDate(tempHomeList.getId() , tempHomeList.getTripDate());
-            database.tripDaos().updateTripTime(tempHomeList.getId() , tempHomeList.getTripTime());
+//            database.tripDaos().updateTripName(tempNewTrip.getId() , tempNewTrip.getTripName());
+//            database.tripDaos().updateTripStartPoint(tempNewTrip.getId() , tempNewTrip.getStartPoint());
+//            database.tripDaos().updateTripEndPoint(tempNewTrip.getId() , tempNewTrip.getEndPoint());
+//            database.tripDaos().updateTripDate(tempNewTrip.getId() , tempNewTrip.getTripDate());
+//            database.tripDaos().updateTripTime(tempNewTrip.getId() , tempNewTrip.getTripTime());
 
             setResult(200,returnIntent);
             //finish();
@@ -390,7 +390,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         builder.show();
     }
 
-    */
+
 
     public void setAlarm(String tripName, String date, String time, String endLocation) {
 

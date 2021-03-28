@@ -1,12 +1,10 @@
 package com.example.tripremainder;
 
-import com.example.tripremainder.home.HomeList;
+import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Map;
 
 public class FIreBaseConnection {
     private final DatabaseReference databaseRef;
@@ -27,21 +25,21 @@ public class FIreBaseConnection {
     }
 
 
-    public void addNewTrip(HomeList newTrip){
+    public void addNewTrip(NewTrip newTrip){
 //change getTripName to get tripID
-        databaseRef.child("users").child(userId).child("comingTrips").child(newTrip.getTripName()).setValue(newTrip);
+        databaseRef.child("users").child(userId).child("comingTrips").child(String.valueOf(newTrip.getId())).setValue(newTrip);
 
     }
-    public void deleteTrip(String tripName) {
+    public void deleteTrip(int tripId) {
         //change getTripName to get tripID
-         databaseRef.child("users").child(userId).child("comingTrips").child(tripName).removeValue();
+         databaseRef.child("users").child(userId).child("comingTrips").child(String.valueOf(tripId)).removeValue();
 
     }
 
-    public void updateTrip(HomeList trip) {
+    public void updateTrip(NewTrip trip) {
         //databaseRef.child("users").child(userId).child("comingTrips").child(oldTripName).removeValue();
         //change getTripName to get tripID
-        databaseRef.child("users").child(userId).child("comingTrips").child(trip.getTripName()).setValue(trip);
+        databaseRef.child("users").child(userId).child("comingTrips").child(String.valueOf(trip.getId())).setValue(trip);
 
        // databaseRef.child("users").child(userId).child("comingTrips").child(trip.getTripName()).updateChildren((Map<String, Object>) trip);
     }

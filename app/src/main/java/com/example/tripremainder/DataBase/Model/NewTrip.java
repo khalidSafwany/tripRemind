@@ -1,10 +1,12 @@
 package com.example.tripremainder.DataBase.Model;
 
+
+
+import java.io.Serializable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.io.Serializable;
 
 @Entity
 public class NewTrip implements Serializable {

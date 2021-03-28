@@ -17,6 +17,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tripremainder.AddNewTripActivity;
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
@@ -94,6 +95,8 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                 NewTrip trip = tripList.get(holder.getAdapterPosition());
                 database.tripDaos().delete(trip);
+                FIreBaseConnection conn = new FIreBaseConnection();
+                conn.deleteTrip(trip.getId());
                 int postion = holder.getAdapterPosition();
                 tripList.remove(position);
                 notifyItemRemoved(position);
@@ -106,12 +109,7 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onClick(View view) {
                 NewTrip trip = tripList.get(position);
                 Intent intent = new Intent(context , AddNewTripActivity.class);
-                intent.putExtra("id" , trip.getId());
-                intent.putExtra("trip_name" , trip.getTripName());
-                intent.putExtra("trip_start_point" ,trip.getStartPoint());
-                intent.putExtra("trip_end_point" ,trip.getEndPoint());
-                intent.putExtra("trip_date" , trip.getTripDate());
-                intent.putExtra("trip_time" , trip.getTripTime());
+                intent.putExtra("UpdatedTrip",trip);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 context.startActivity(intent);
             }

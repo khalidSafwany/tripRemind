@@ -67,7 +67,6 @@ public class HomeFragment extends Fragment {
         if (requestCode == 200 && resultCode == 200 ) {
 
             NewTrip result= (NewTrip) data.getSerializableExtra("result");
-            database.tripDaos().insertTrip(result);
             tripList.clear();
             tripList.addAll(database.tripDaos().getUpcomingTrips());
             adapter.notifyDataSetChanged();
