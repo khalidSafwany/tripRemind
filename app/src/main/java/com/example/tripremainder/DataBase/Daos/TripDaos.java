@@ -44,6 +44,9 @@ public interface TripDaos {
     @Query("select * from NewTrip where state = 0")
     List<NewTrip> getUpcomingTrips();
 
+    @Query("select * from NewTrip where id = :id")
+    List<NewTrip> getTripById(int id);
+
     @Query("select * from NewTrip where state != 0")
     List<NewTrip> getHistoryTrips();
 

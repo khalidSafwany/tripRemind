@@ -44,6 +44,8 @@ public class HomeFragment extends Fragment {
         floatButtonAction = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         floatButtonAction.setOnClickListener(v->{
             Intent addTripIntent = new Intent(getActivity(), AddNewTripActivity.class);
+           // addTripIntent.putExtra("id" , NewTrip.getId());
+
             startActivityForResult(addTripIntent,200);
         });
         RecyclerView recyclerView =(RecyclerView) view.findViewById(R.id.home_RV);
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment {
             database.tripDaos().insertTrip(result);
             tripList.clear();
             tripList.addAll(database.tripDaos().getUpcomingTrips());
+
             adapter.notifyDataSetChanged();
 
 

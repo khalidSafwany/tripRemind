@@ -1,8 +1,12 @@
 package com.example.tripremainder.home;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -16,7 +20,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.tripremainder.MpFragment;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.history.HistoryFragment;
@@ -99,6 +105,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         }
         if (menuItem.getItemId() == R.id.map) {
+            loadFragment(new MpFragment());
             getSupportActionBar().setTitle("Map");
             isSecondryFragmentsActive = true;
 
@@ -151,5 +158,30 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             getSupportActionBar().setTitle("Home");
         }
 
+    }
+    BroadcastReceiver bgshowBroacast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String extra = intent.getStringExtra("BROADCAST");
+            if (extra != null) {
+                if (extra.equalsIgnoreCase("finishBgShowActivity")) {
+
+                    finish();
+                    Log.i("TAG", "onReceive: Bg_show_BroadCast receive from bg_send class ");
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(HomeActivity.this).registerReceiver(bgshowBroacast, new IntentFilter("BG_SHOW_BROADCAST"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(HomeActivity.this).unregisterReceiver(bgshowBroacast);
     }
 }

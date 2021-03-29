@@ -41,6 +41,18 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBp6LRReGxwT3lB37KzWi0p0rBu88MBzKY" />
+        <activity android:name=".notification.DialogNotification"
+            android:theme="@style/Theme.Transparent">
+
+        </activity>
+        <activity
+            android:name=".notification.DialogMessageActivity"
+            android:theme="@style/Theme.Transparent">
+
+        </activity>
         <receiver
             android:name=".notification.AlarmBrodcast"
             android:enabled="true">
@@ -50,14 +62,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <activity android:theme="@style/Theme.Transparent"
-            android:name=".notification.CancelNotification"
-            android:excludeFromRecents="true"
-            android:taskAffinity="">
+        <receiver
+            android:name=".notification.DialogCast"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
 
-        </activity>
-        <activity android:theme="@style/Theme.Transparent"
-            android:name=".notification.StartMap" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
         <activity android:name=".notes.AddNote">
         </activity>
