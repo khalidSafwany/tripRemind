@@ -2,6 +2,7 @@ package com.example.tripremainder;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.tripremainder.Connectivity.Connectivity;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -34,6 +35,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.*;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -60,6 +62,10 @@ public class AddNewTripActivity extends AppCompatActivity{
     Button saveTripBtn;
     NewTrip tempNewTrip;
     NewTrip tripToBeUpdated;
+
+
+    private static String isSyncNeededString = "sync";
+    private static boolean isSyncNeeded = false;
 
 
 
@@ -139,7 +145,10 @@ public class AddNewTripActivity extends AppCompatActivity{
         });
 */
         startLocationEditText.setOnClickListener(v->{
-            showPlacesAssistant();
+            showPlacesAssistant(120);
+        });
+        endLocationEditText.setOnClickListener(v->{
+            showPlacesAssistant(121);
         });
     }
 
@@ -159,8 +168,12 @@ public class AddNewTripActivity extends AppCompatActivity{
 
 
 
+
+
+
     private void submitAndUpdate(){
         if(validate()){
+
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
             tripToBeUpdated.setTripName(tripNameEditText.getText().toString());
             tripToBeUpdated.setStartPoint(startLocationEditText.getText().toString());
@@ -173,9 +186,17 @@ public class AddNewTripActivity extends AppCompatActivity{
             database.tripDaos().updateTripStartPoint(tripToBeUpdated.getId() , tripToBeUpdated.getStartPoint());
             database.tripDaos().updateTripEndPoint(tripToBeUpdated.getId() , tripToBeUpdated.getEndPoint());
             database.tripDaos().updateTripDate(tripToBeUpdated.getId() , tripToBeUpdated.getTripDate());
-            database.tripDaos().updateTripTime(tripToBeUpdated.getId() , tripToBeUpdated.getTripTime());
-            connection.updateTrip(tripToBeUpdated);
+
+            try {
+               isSyncNeeded = Connectivity.checkConnection();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(!isSyncNeeded) {
+                connection.updateTrip(tripToBeUpdated);
+            }
             Intent returnIntent = new Intent();
+            returnIntent.putExtra(isSyncNeededString,isSyncNeeded);
             returnIntent.putExtra("result", tripToBeUpdated);
             setResult(200,returnIntent);
             finish();
@@ -183,16 +204,18 @@ public class AddNewTripActivity extends AppCompatActivity{
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        setUpdateView();
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(tripToBeUpdated!=null) {
+            setUpdateView();
+        }
+    }
 
     private  void setUpdateView(){
         addTripBtn.setVisibility(View.INVISIBLE);
         addTripBtn.setEnabled(false);
-        tripNameEditText.setText("iioiiiiiiii");
+        tripNameEditText.setText(tripToBeUpdated.getTripName());
         startLocationEditText.setText(tripToBeUpdated.getStartPoint());
         endLocationEditText.setText(tripToBeUpdated.getEndPoint());
         timeText.setText(tripToBeUpdated.getTripTime());
@@ -202,20 +225,26 @@ public class AddNewTripActivity extends AppCompatActivity{
 
 
 
-    private void showPlacesAssistant(){
+    private void showPlacesAssistant(int code){
         List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
         Intent searchIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,fieldList).build(AddNewTripActivity.this);
-        startActivityForResult(searchIntent,100);
+        startActivityForResult(searchIntent,code);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == 120 && resultCode == RESULT_OK) {
 
             Place place = Autocomplete.getPlaceFromIntent(data);
             startLocationEditText.setText(place.getAddress());
+
+        }
+        else if (requestCode == 121 && resultCode == RESULT_OK) {
+
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            endLocationEditText.setText(place.getAddress());
 
         }
         else if(resultCode == AutocompleteActivity.RESULT_ERROR)
@@ -242,6 +271,14 @@ public class AddNewTripActivity extends AppCompatActivity{
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
             tempNewTrip = new NewTrip();
+            try {
+                isSyncNeeded = Connectivity.checkConnection();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
             Intent intent = getIntent();
             tempNewTrip.setId(intent.getIntExtra("id" , 0));
             tempNewTrip.setState(0);
@@ -252,17 +289,13 @@ public class AddNewTripActivity extends AppCompatActivity{
             tempNewTrip.setTripTime(timeText.getText().toString().trim());
             long id = database.tripDaos().insertTrip(tempNewTrip);
             tempNewTrip.setId((int)id);
-            connection.addNewTrip(tempNewTrip);
+            if(!isSyncNeeded) {
+                connection.addNewTrip(tempNewTrip);
+            }
             displayAlert();
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempNewTrip);
-//            database.tripDaos().updateTrip(tempHomeList.getTripName() , tempHomeList.getStartPoint() , tempHomeList.getEndPoint()
-//            , tempHomeList.getTripDate() , tempHomeList.getTripTime() , tempHomeList.getId());
-//            database.tripDaos().updateTripName(tempNewTrip.getId() , tempNewTrip.getTripName());
-//            database.tripDaos().updateTripStartPoint(tempNewTrip.getId() , tempNewTrip.getStartPoint());
-//            database.tripDaos().updateTripEndPoint(tempNewTrip.getId() , tempNewTrip.getEndPoint());
-//            database.tripDaos().updateTripDate(tempNewTrip.getId() , tempNewTrip.getTripDate());
-//            database.tripDaos().updateTripTime(tempNewTrip.getId() , tempNewTrip.getTripTime());
+            returnIntent.putExtra(isSyncNeededString,isSyncNeeded);
 
             setResult(200,returnIntent);
             //finish();
@@ -270,26 +303,6 @@ public class AddNewTripActivity extends AppCompatActivity{
 
     }
 
-    ///////////////////////////////////
-
-
-//    private void submit(){
-//        if(validate()){
-//            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-//            tempHomeList = new HomeList();
-//            tempHomeList.setTripName(tripNameEditText.getText().toString());
-//            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
-//            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
-//            tempHomeList.setTripDate(dateText.getText().toString());
-//            tempHomeList.setTripTime(timeText.getText().toString());
-//            //tempHomeList.setNotes(notes);
-//            Intent returnIntent = new Intent();
-//            returnIntent.putExtra("result", (Serializable) tempHomeList);
-//            setResult(200,returnIntent);
-//            finish();
-//        }
-//
-//    }
 
     private boolean validate(){
         if(!tripNameEditText.getText().toString().matches("")){
@@ -417,11 +430,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     }
 
     public void displayAlert() {
-        // AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        // Intent intent = new Intent(getApplicationContext(), AlarmBrodcast.class);
-        // PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        //String dateandtime = date + " " + timeTonotify;
-        //am.set(AlarmManager.RTC_WAKEUP, date1.getTime(), pendingIntent);
+
         String value = (tripNameEditText.getText().toString().trim());
         String Sdate = (dateText.getText().toString().trim());
         String Stime = (timeText.getText().toString().trim());

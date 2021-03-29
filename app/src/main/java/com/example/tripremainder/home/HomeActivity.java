@@ -34,6 +34,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     boolean isSecondryFragmentsActive;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
