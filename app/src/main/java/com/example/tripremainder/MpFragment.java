@@ -1,5 +1,8 @@
 package com.example.tripremainder;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.RoomDB;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +31,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,11 +48,16 @@ public class MpFragment extends Fragment {
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
+    NewTrip newTrip;
+    private RoomDB database;
 
+    private List<NewTrip> tripHistoryList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        database = RoomDB.getInstance(getContext());
+        tripHistoryList = new ArrayList<>();
+        tripHistoryList = database.tripDaos().getHistoryTrips();
     }
 
     @Override
@@ -74,7 +86,9 @@ public class MpFragment extends Fragment {
                 Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
                         .clickable(true)
                         .add(
-                                new LatLng(-35.016, 143.321),
+
+                             // endPoint = (newTrip.getEndPoint();
+                              //  new LatLng(newTrip.getStartPoint()., 143.321),
                                 new LatLng(-34.747, 145.592),
                                 new LatLng(-34.364, 147.891),
                                 new LatLng(-33.501, 150.217),
@@ -132,5 +146,28 @@ public class MpFragment extends Fragment {
         polyline.setJointType(JointType.ROUND);
     }
 
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
 
 }

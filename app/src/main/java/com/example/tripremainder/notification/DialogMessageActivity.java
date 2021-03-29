@@ -17,7 +17,7 @@ public class DialogMessageActivity extends AppCompatActivity {
      //   setContentView(R.layout.activity_dialog_message);
         String tripName = getIntent().getStringExtra("tripName");
         String endPoint= getIntent().getStringExtra("tripLocation");
-        int id = getIntent().getIntExtra("tripID",-1);
+        int id = getIntent().getIntExtra("tripID",1);
         Intent intent = new Intent("BG_SHOW_BROADCAST");
         intent.putExtra("BROADCAST", "finishBgShowActivity");
         LocalBroadcastManager.getInstance(DialogMessageActivity.this)

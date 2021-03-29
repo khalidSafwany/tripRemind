@@ -32,7 +32,9 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        //newTrip=new NewTrip();
 
+        database = RoomDB.getInstance(getContext());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setCancelable(false);
@@ -45,16 +47,17 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 // NewTrip trip1=tripList.get(newTrip.getId());
-                newTrip = database.tripDaos().getTripById(id).get(0);
+
+                newTrip = database.tripDaos().getTripById((int) id);
                 newTrip.setState(1);
                 database.tripDaos().updateTripState(newTrip.getId() , newTrip.getState());
-                database.tripDaos().delete(newTrip);
+                //database.tripDaos().delete(newTrip);
                 //tripList.remove(newTrip.getId());
               Uri gmmIntentUri = Uri.parse("geo:0,0?q="+triploc);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-                getActivity().finish();
+                getActivity().finishAffinity();
             }
         });
         builder.setNeutralButton("Snooze", new DialogInterface.OnClickListener() {
@@ -68,12 +71,22 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
                 intent.putExtra("tripID",id);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
                 am.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent);
+                getActivity().finishAffinity();
 
                 }
 
 
         });
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                getActivity().finishAffinity();
+
+            }
+        });
+
+
         // create and show the alert dialog
 
         return builder.create();
