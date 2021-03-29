@@ -14,7 +14,7 @@ import java.util.List;
 public interface TripDaos {
 
     @Insert
-    void insertTrip(NewTrip trip);
+    long insertTrip(NewTrip trip);
 
     @Delete
     void delete(NewTrip trip);
