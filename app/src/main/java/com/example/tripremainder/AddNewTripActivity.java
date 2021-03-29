@@ -3,6 +3,7 @@ package com.example.tripremainder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.tripremainder.Connectivity.Connectivity;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -45,6 +46,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.*;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,7 +57,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AddNewTripActivity extends AppCompatActivity {
+
+public class AddNewTripActivity extends AppCompatActivity{
 
 
     static EditText tripNameEditText;
@@ -73,17 +76,22 @@ public class AddNewTripActivity extends AppCompatActivity {
     NewTrip tripToBeUpdated;
 
 
-    ArrayList<String> notes;
+    private static String isSyncNeededString = "sync";
+    private static boolean isSyncNeeded = false;
+
+
+
+    ArrayList<String>notes;
     PlacesClient placesClient;
     FIreBaseConnection connection;
 
 
     RoomDB database;
-    List<NewTrip> dataList = new ArrayList<>();
-    NewTrip newTrip;
+    List<com.example.tripremainder.DataBase.Model.NewTrip> dataList = new ArrayList<>();
     private HomeAdapter adapter;
     public static final int Notification_id = 1;
-    public String timeTonotify;
+    String timeTonotify;
+
 
 
     @Override
@@ -94,9 +102,10 @@ public class AddNewTripActivity extends AppCompatActivity {
         notes = new ArrayList<>();
         setView();
 
-        Places.initialize(AddNewTripActivity.this, "AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
+        Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
         connection = new FIreBaseConnection();
+
 
 
         //Hager code
@@ -115,15 +124,18 @@ public class AddNewTripActivity extends AppCompatActivity {
     }
 
 
-    private void setView() {
+
+
+
+    private void setView(){
         tripNameEditText = findViewById(R.id.TripNameTextField);
         startLocationEditText = findViewById(R.id.startPlaceTextField);
         endLocationEditText = findViewById(R.id.endLocationText);
         calenderButton = findViewById(R.id.calenderButton);
-        calenderButton.setOnClickListener(v -> showDatePicker());
+        calenderButton.setOnClickListener(v-> showDatePicker());
         dateText = findViewById(R.id.DateTextView);
         timeButton = findViewById(R.id.timeButton);
-        timeButton.setOnClickListener(v -> showTimePicker());
+        timeButton.setOnClickListener(v-> showTimePicker());
         timeText = findViewById(R.id.timeText);
         tripTypeSpinner = findViewById(R.id.tripTypeSpinner);
         addTripBtn = findViewById(R.id.addTripButton);
@@ -131,6 +143,7 @@ public class AddNewTripActivity extends AppCompatActivity {
 
 //check if view is for update or for new trip
         checkForUpdateOrNewTrip();
+
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -143,28 +156,33 @@ public class AddNewTripActivity extends AppCompatActivity {
             showAddNoteDialogue();
         });
 */
-        startLocationEditText.setOnClickListener(v -> {
-            showPlacesAssistant();
+        startLocationEditText.setOnClickListener(v->{
+            showPlacesAssistant(120);
+        });
+        endLocationEditText.setOnClickListener(v->{
+            showPlacesAssistant(121);
         });
     }
 
 
-    private void checkForUpdateOrNewTrip() {
+    private void checkForUpdateOrNewTrip(){
         tripToBeUpdated = (NewTrip) getIntent().getSerializableExtra("UpdatedTrip");
-        if (tripToBeUpdated == null) {
+        if(tripToBeUpdated == null) {
             saveTripBtn.setVisibility(View.INVISIBLE);
             saveTripBtn.setEnabled(false);
-            addTripBtn.setOnClickListener(v -> submit());
-        } else {
+            addTripBtn.setOnClickListener(v->submit());
+        }
+        else{
             setUpdateView();
-            saveTripBtn.setOnClickListener(v -> submitAndUpdate());
+            saveTripBtn.setOnClickListener(v->submitAndUpdate());
         }
     }
 
 
-    private void submitAndUpdate() {
-        if (validate()) {
-            Toast.makeText(AddNewTripActivity.this, " Input Validated", Toast.LENGTH_SHORT).show();
+
+    private void submitAndUpdate(){
+        if(validate()){
+            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
             tripToBeUpdated.setTripName(tripNameEditText.getText().toString());
             tripToBeUpdated.setStartPoint(startLocationEditText.getText().toString());
             tripToBeUpdated.setEndPoint(endLocationEditText.getText().toString());
@@ -172,29 +190,37 @@ public class AddNewTripActivity extends AppCompatActivity {
             tripToBeUpdated.setTripTime(timeText.getText().toString());
             //tempNewTrip.setNotes(notes);
 
-            database.tripDaos().updateTripName(tripToBeUpdated.getId(), tripToBeUpdated.getTripName());
-            database.tripDaos().updateTripStartPoint(tripToBeUpdated.getId(), tripToBeUpdated.getStartPoint());
-            database.tripDaos().updateTripEndPoint(tripToBeUpdated.getId(), tripToBeUpdated.getEndPoint());
-            database.tripDaos().updateTripDate(tripToBeUpdated.getId(), tripToBeUpdated.getTripDate());
-            database.tripDaos().updateTripTime(tripToBeUpdated.getId(), tripToBeUpdated.getTripTime());
-            connection.updateTrip(tripToBeUpdated);
-            setAlarm(tripToBeUpdated.getTripName(), tripToBeUpdated.getTripDate(), tripToBeUpdated.getEndPoint(), tripToBeUpdated.getId());
+            database.tripDaos().updateTripName(tripToBeUpdated.getId() , tripToBeUpdated.getTripName());
+            database.tripDaos().updateTripStartPoint(tripToBeUpdated.getId() , tripToBeUpdated.getStartPoint());
+            database.tripDaos().updateTripEndPoint(tripToBeUpdated.getId() , tripToBeUpdated.getEndPoint());
+            database.tripDaos().updateTripDate(tripToBeUpdated.getId() , tripToBeUpdated.getTripDate());
 
+            try {
+               isSyncNeeded = Connectivity.checkConnection();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(!isSyncNeeded) {
+                connection.updateTrip(tripToBeUpdated);
+            }
             Intent returnIntent = new Intent();
+            returnIntent.putExtra(isSyncNeededString,isSyncNeeded);
             returnIntent.putExtra("result", tripToBeUpdated);
-            setResult(200, returnIntent);
+            setResult(200,returnIntent);
             finish();
         }
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        setUpdateView();
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(tripToBeUpdated!=null) {
+            setUpdateView();
+        }
+    }
 
-    private void setUpdateView() {
+    private  void setUpdateView(){
         addTripBtn.setVisibility(View.INVISIBLE);
         addTripBtn.setEnabled(false);
         tripNameEditText.setText("iioiiiiiiii");
@@ -202,60 +228,67 @@ public class AddNewTripActivity extends AppCompatActivity {
         endLocationEditText.setText(tripToBeUpdated.getEndPoint());
         timeText.setText(tripToBeUpdated.getTripTime());
         dateText.setText(tripToBeUpdated.getTripDate());
-
         //notes = tripToBeUpdated.getNotes();
     }
 
 
-    private void showPlacesAssistant() {
+
+    private void showPlacesAssistant(int code){
         List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
-        Intent searchIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(AddNewTripActivity.this);
-        startActivityForResult(searchIntent, 100);
+        Intent searchIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,fieldList).build(AddNewTripActivity.this);
+        startActivityForResult(searchIntent,code);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == 120 && resultCode == RESULT_OK) {
 
             Place place = Autocomplete.getPlaceFromIntent(data);
             startLocationEditText.setText(place.getAddress());
-            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            tripNameEditText.setText("text.get(0)");
 
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+        }
+        else if (requestCode == 121 && resultCode == RESULT_OK) {
+
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            endLocationEditText.setText(place.getAddress());
+
+        }
+        else if(resultCode == AutocompleteActivity.RESULT_ERROR)
+        {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-
     // Hager code
 
-    private void submit() {
-        if (validate()) {
-            Toast.makeText(AddNewTripActivity.this, " Input Validated", Toast.LENGTH_SHORT).show();
-//            tempNewTrip = new NewTrip();
-//            tempNewTrip.setTripName(tripNameEditText.getText().toString());
-//            tempNewTrip.setStartPoint(startLocationEditText.getText().toString());
-//            tempNewTrip.setEndPoint(endLocationEditText.getText().toString());
-//            tempNewTrip.setTripDate(dateText.getText().toString());
-//            tempNewTrip.setTripTime(timeText.getText().toString());
-            // tempNewTrip.setNotes(notes);
+    private void submit(){
+        if(validate()){
+            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+            tempNewTrip = new NewTrip();
+            tempNewTrip.setTripName(tripNameEditText.getText().toString());
+            tempNewTrip.setStartPoint(startLocationEditText.getText().toString());
+            tempNewTrip.setEndPoint(endLocationEditText.getText().toString());
+            tempNewTrip.setTripDate(dateText.getText().toString());
+            tempNewTrip.setTripTime(timeText.getText().toString());
+           // tempNewTrip.setNotes(notes);
 
             //
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
             tempNewTrip = new NewTrip();
+            try {
+                isSyncNeeded = Connectivity.checkConnection();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
             Intent intent = getIntent();
-
-            // NewTrip result= (NewTrip) data.getSerializableExtra("result");
-            //database.tripDaos().insertTrip(tempHomeList);
-            // Toast.makeText(AddNewTripActivity.this, tempHomeList.getId(), Toast.LENGTH_SHORT).show();
-
-
-           // tempNewTrip.setId(intent.getIntExtra("id", 0));
+            tempNewTrip.setId(intent.getIntExtra("id" , 0));
             tempNewTrip.setState(0);
             tempNewTrip.setTripName(tripNameEditText.getText().toString().trim());
             tempNewTrip.setStartPoint(startLocationEditText.getText().toString().trim());
@@ -263,20 +296,18 @@ public class AddNewTripActivity extends AppCompatActivity {
             tempNewTrip.setTripDate(dateText.getText().toString().trim());
             tempNewTrip.setTripTime(timeText.getText().toString().trim());
             long id = database.tripDaos().insertTrip(tempNewTrip);
-            tempNewTrip.setId((int) id);
+            tempNewTrip.setId((int)id);
+            if(!isSyncNeeded) {
+                connection.addNewTrip(tempNewTrip);
+            }
+
             setAlarm(tempNewTrip.getTripName(), tempNewTrip.getTripDate(), tempNewTrip.getEndPoint(), (int) id);
            // Toast.makeText(AddNewTripActivity.this, id+"", Toast.LENGTH_SHORT).show();
 
             connection.addNewTrip(tempNewTrip);
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", (Serializable) tempNewTrip);
-//            database.tripDaos().updateTrip(tempHomeList.getTripName() , tempHomeList.getStartPoint() , tempHomeList.getEndPoint()
-//            , tempHomeList.getTripDate() , tempHomeList.getTripTime() , tempHomeList.getId());
-//            database.tripDaos().updateTripName(tempNewTrip.getId() , tempNewTrip.getTripName());
-//            database.tripDaos().updateTripStartPoint(tempNewTrip.getId() , tempNewTrip.getStartPoint());
-//            database.tripDaos().updateTripEndPoint(tempNewTrip.getId() , tempNewTrip.getEndPoint());
-//            database.tripDaos().updateTripDate(tempNewTrip.getId() , tempNewTrip.getTripDate());
-//            database.tripDaos().updateTripTime(tempNewTrip.getId() , tempNewTrip.getTripTime());
+            returnIntent.putExtra(isSyncNeededString,isSyncNeeded);
 
             setResult(200, returnIntent);
             finish();
@@ -284,72 +315,99 @@ public class AddNewTripActivity extends AppCompatActivity {
 
     }
 
+    ///////////////////////////////////
 
-    private boolean validate() {
-        if (!tripNameEditText.getText().toString().matches("")) {
-            if (!startLocationEditText.getText().toString().matches("")) {
-                if (!endLocationEditText.getText().toString().matches("")) {
-                    if (!timeText.getText().toString().matches("")) {
-                        if (dateText.getText().toString().matches("")) {
-                            Toast.makeText(AddNewTripActivity.this, "Missing Trip Date", Toast.LENGTH_SHORT).show();
+
+//    private void submit(){
+//        if(validate()){
+//            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
+//            tempHomeList = new HomeList();
+//            tempHomeList.setTripName(tripNameEditText.getText().toString());
+//            tempHomeList.setStartPoint(startLocationEditText.getText().toString());
+//            tempHomeList.setEndPoint(endLocationEditText.getText().toString());
+//            tempHomeList.setTripDate(dateText.getText().toString());
+//            tempHomeList.setTripTime(timeText.getText().toString());
+//            //tempHomeList.setNotes(notes);
+//            Intent returnIntent = new Intent();
+//            returnIntent.putExtra("result", (Serializable) tempHomeList);
+//            setResult(200,returnIntent);
+//            finish();
+//        }
+//
+//    }
+
+    private boolean validate(){
+        if(!tripNameEditText.getText().toString().matches("")){
+            if(!startLocationEditText.getText().toString().matches("")){
+                if(!endLocationEditText.getText().toString().matches("")){
+                    if(!timeText.getText().toString().matches("")){
+                        if(dateText.getText().toString().matches(""))
+                        {
+                            Toast.makeText(AddNewTripActivity.this,"Missing Trip Date",Toast.LENGTH_SHORT).show();
                             return false;
                         }
 
-                    } else {
-                        Toast.makeText(AddNewTripActivity.this, "Missing Trip Time", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(AddNewTripActivity.this,"Missing Trip Time",Toast.LENGTH_SHORT).show();
                         return false;
                     }
 
-                } else {
-                    Toast.makeText(AddNewTripActivity.this, "Missing Trip End Location", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(AddNewTripActivity.this,"Missing Trip End Location",Toast.LENGTH_SHORT).show();
                     return false;
                 }
-            } else {
-                Toast.makeText(AddNewTripActivity.this, "Missing Trip Start Location", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(AddNewTripActivity.this,"Missing Trip Start Location",Toast.LENGTH_SHORT).show();
                 return false;
             }
-        } else {
-            Toast.makeText(AddNewTripActivity.this, "Missing Trip Name", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(AddNewTripActivity.this,"Missing Trip Name",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private void showTimePicker() {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                timeTonotify = i + ":" + i1;
-                timeText.setText(timeTonotify);
+    private void showTimePicker(){
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(AddNewTripActivity.this);
 
-            }
-        }, hour, minute, false);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddNewTripActivity.this, (
+                timePicker, hourOfDay, minutes) -> {
+            String dateString = hourOfDay+" : "+ minutes;
+            timeText.setText(dateString);
+
+        },
+                hour,
+                minute,
+                is24HourFormat);
         timePickerDialog.setTitle("Set your trip start time");
         timePickerDialog.show();
 
     }
 
 
-    private void showDatePicker() {
+    private void showDatePicker(){
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                dateText.setText(day + "-" + (month + 1) + "-" + year);
-            }
-        }, year, month, day);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddNewTripActivity.this,
+                (datePicker, year1, month1, day) -> {
+                    String dateString = day + "/" + month+1 + "/" + year;
+                    dateText.setText(dateString);
+                }, year, month, dayOfMonth);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.setTitle("Set your trip date");
         datePickerDialog.show();
     }
 
-    void showAddNoteDialogue() {
+
+    void showAddNoteDialogue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Note");
 
@@ -358,12 +416,13 @@ public class AddNewTripActivity extends AppCompatActivity {
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
+
 // Set up the buttons
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 notes.add(input.getText().toString());
-                Toast.makeText(AddNewTripActivity.this, "Note added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddNewTripActivity.this,"Note added",Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -397,10 +456,49 @@ public class AddNewTripActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        finish();
 
     }
 
+    public void displayAlert() {
+        // AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        // Intent intent = new Intent(getApplicationContext(), AlarmBrodcast.class);
+        // PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //String dateandtime = date + " " + timeTonotify;
+        //am.set(AlarmManager.RTC_WAKEUP, date1.getTime(), pendingIntent);
+        String value = (tripNameEditText.getText().toString().trim());
+        String Sdate = (dateText.getText().toString().trim());
+        String Stime = (timeText.getText().toString().trim());
+        String endpoint = (endLocationEditText.getText().toString().trim());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddNewTripActivity.this);
+        builder.setCancelable(false);
+        builder.setTitle("Trip Remind");
+        builder.setMessage(value);
+        // add the buttons
+        builder.setIcon(R.drawable.ic_baseline_calendar_today_24);
+        builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+endpoint);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+        builder.setNeutralButton("Snooze", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                setAlarm(value, Sdate, Stime, endpoint);
+
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
-
-
-
