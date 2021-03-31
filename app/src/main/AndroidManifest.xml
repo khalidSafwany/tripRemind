@@ -20,7 +20,7 @@
             android:theme="@style/Theme.TripRemainder.NoActionBar"></activity>
         <activity
             android:name=".auth.Sign_inActivity"
-            android:label="@string/title_activity_sign_in">
+            android:label="@string/title_activity_sign_in"></activity>
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,15 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".home.HomeActivity"
-            android:theme="@style/Theme.TripRemainder.NoActionBar"></activity>
-        <activity
-            android:name=".auth.Sign_inActivity"
-            android:label="@string/title_activity_sign_in">
-        </activity>
-        <activity android:name=".AddNewTripActivity" />
-        <activity android:name=".MainActivity"></activity>
         <activity android:name=".AddNewTripActivity" />
         <activity android:name=".MainActivity"></activity>
         <activity
@@ -70,14 +61,8 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".notification.CancelNotification"
-            android:excludeFromRecents="true"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Transparent"></activity>
-        <activity
-            android:name=".notification.StartMap"
-            android:theme="@style/Theme.Transparent" />
+
+
         <activity android:name=".notes.AddNote"></activity>
         <receiver
             android:name=".notification.DialogCast"
@@ -89,7 +74,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".notes.AddNote"></activity>
     </application>
 
 </manifest>

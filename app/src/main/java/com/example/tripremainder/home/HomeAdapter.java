@@ -110,17 +110,12 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 notifyDataSetChanged();
             }else{
                 trip1.setState(1);
+                trip1.setStateType("Done");
                 database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
+                database.tripDaos().updateTripStateType(trip1.getId() , trip1.getStateType());
                 tripList.remove(position);
                 notifyDataSetChanged();
             }
-
-            trip1.setState(1);
-            trip1.setStateType("Done");
-            database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
-            database.tripDaos().updateTripStateType(trip1.getId() , trip1.getStateType());
-            tripList.remove(position);
-            notifyDataSetChanged();
 
         });
         Log.i(TAG, "onBindViewHolder:");

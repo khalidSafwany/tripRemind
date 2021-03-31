@@ -45,6 +45,11 @@ public class HomeFragment extends Fragment {
     RoomDB database;
     private List<NewTrip> tripList;
 
+    // The Entry point of the database
+    private FirebaseDatabase mFirebaseDatabase;
+
+    String email;
+
     private static boolean isSyncNeeded = false;
     private final static String isSyncNeededString = "sync";
 
@@ -55,12 +60,7 @@ void SyncData(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("Sync");
 
-    // The Entry point of the database
-    private FirebaseDatabase mFirebaseDatabase;
-    // The Database Reference
-    private DatabaseReference mDatabaseReference;
 
-    String email;
 
 
 // Set up the input

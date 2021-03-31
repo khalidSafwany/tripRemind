@@ -144,26 +144,6 @@ public class AddNewTripActivity extends AppCompatActivity{
         ////////////////
         tempNewTrip = new NewTrip();
 
-        tripTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==1){
-
-                    calenderButton.setVisibility(View.GONE);
-                    dateText.setVisibility(View.GONE);
-                    timeButton.setVisibility(View.GONE);
-                    timeText.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-
 
 
     }
