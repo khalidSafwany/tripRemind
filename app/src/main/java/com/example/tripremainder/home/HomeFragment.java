@@ -1,6 +1,7 @@
 package com.example.tripremainder.home;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +26,10 @@ import com.example.tripremainder.AddNewTripActivity;
 import com.example.tripremainder.Connectivity.Connectivity;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +50,19 @@ public class HomeFragment extends Fragment {
 
 void SyncData(){
     // implement  with getting data from database then to firebase
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    builder.setView(R.layout.progress_bar_layout);
+    Dialog dialog = builder.create();
+    dialog.show();
+
+    RoomDB databaseConnection = RoomDB.getInstance(this.getContext());
+    ArrayList<NewTrip>comingTrips = (ArrayList<NewTrip>) databaseConnection.tripDaos().getUpcomingTrips();
+    ArrayList<NewTrip>HistoryTrips = (ArrayList<NewTrip>) databaseConnection.tripDaos().getHistoryTrips();
+    FIreBaseConnection fIreBaseConnection = new FIreBaseConnection();
+    fIreBaseConnection.syncFullData(comingTrips, HistoryTrips);
+    isSyncNeeded = false;
+    dialog.dismiss();
+
 }
     void showSyncDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
@@ -65,7 +81,9 @@ void SyncData(){
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                isSyncNeeded = false;
                 dialog.cancel();
             }
         });

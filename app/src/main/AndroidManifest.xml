@@ -62,7 +62,8 @@
         <activity android:name=".notes.AddNote">
         </activity>
 
-
+        <service android:name=".SimpleService" />
+        <activity android:name=".HiActivty" android:theme="@style/Theme.AppCompat.Dialog"></activity>
     </application>
 
 </manifest>

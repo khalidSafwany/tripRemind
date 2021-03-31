@@ -2,7 +2,12 @@ package com.example.tripremainder;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
+import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
 import com.example.tripremainder.Connectivity.Connectivity;
+
+import com.bubbles.*;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -35,6 +40,8 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.*;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -80,7 +87,43 @@ public class AddNewTripActivity extends AppCompatActivity{
     public static final int Notification_id = 1;
     String timeTonotify;
 
+void startBubble(){
+    FloatingBubblePermissions.startPermissionRequest(this);
 
+    try {
+        final DataClass[] myListData = new DataClass[] {
+                new DataClass("one"),
+                new DataClass("two"),
+                new DataClass("three"),
+                new DataClass("four"),
+                new DataClass("five"),
+                new DataClass("six"),
+                new DataClass("seven"),
+                new DataClass("eight"),
+                new DataClass("nine"),
+                new DataClass("ten"),
+                new DataClass("eleven"),
+                new DataClass("twelve"),
+        };
+        FileOutputStream fos = openFileOutput("data.txt",MODE_PRIVATE);
+        DataOutputStream dos = new DataOutputStream(fos);
+        StringBuilder data = new StringBuilder();
+        for (DataClass item : myListData) {
+            data.append(item.getNoteText());
+            data.append("~");
+
+        }
+        dos.writeUTF(data.toString());
+        dos.flush();
+
+        dos.close();
+        fos.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    startService(new Intent(this, SimpleService.class));
+}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +135,7 @@ public class AddNewTripActivity extends AppCompatActivity{
 
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
-        connection = new FIreBaseConnection();
+
 
 
 
@@ -110,8 +153,6 @@ public class AddNewTripActivity extends AppCompatActivity{
         ////////////////
 
     }
-
-
 
 
 
@@ -223,7 +264,11 @@ public class AddNewTripActivity extends AppCompatActivity{
         //notes = tripToBeUpdated.getNotes();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+    }
 
     private void showPlacesAssistant(int code){
         List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
@@ -257,6 +302,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     // Hager code
 
     private void submit(){
+        startBubble();
         if(validate()){
             Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
             tempNewTrip = new NewTrip();
@@ -272,7 +318,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             //connection.updateTrip(tempHomeList,"first");
             tempNewTrip = new NewTrip();
             try {
-                isSyncNeeded = Connectivity.checkConnection();
+                isSyncNeeded = !Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -290,6 +336,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             long id = database.tripDaos().insertTrip(tempNewTrip);
             tempNewTrip.setId((int)id);
             if(!isSyncNeeded) {
+                     connection = new FIreBaseConnection();
                 connection.addNewTrip(tempNewTrip);
             }
             displayAlert();
