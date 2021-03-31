@@ -6,7 +6,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/design_default_color_primary_dark"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+        android:background="@drawable/custom_background"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Toolbar Title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:id="@+id/toolbar_title" />
+    </androidx.appcompat.widget.Toolbar>
 
 </LinearLayout>
