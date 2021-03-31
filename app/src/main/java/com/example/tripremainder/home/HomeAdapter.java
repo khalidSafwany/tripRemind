@@ -20,18 +20,26 @@ import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
+import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
 import com.example.tripremainder.AddNewTripActivity;
 import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.SimpleService;
 import com.example.tripremainder.home.details.DetailsActivity;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.notes.AddNote;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -89,6 +97,9 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 context.startActivity(intent);
             }
         });
+
+
+
         holder.startBtn.setOnClickListener(v->{
 
             Uri gmmIntentUri = Uri.parse("geo:0,0?q="+holder.endPoint.getText().toString());
@@ -98,6 +109,8 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             NewTrip trip1 = tripList.get(position);
             String start = trip1.getStartPoint();
             String end = trip1.getEndPoint();
+            List<NoteModel> notes = database.noteDao().getAllNotes(trip1.getId());
+            startBubble(notes);
             if(trip1.getDirection().equals("Round trip")){
                 trip1.setDirection("One way");
                 trip1.setEndPoint(start);
@@ -113,6 +126,9 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 trip1.setStateType("Done");
                 database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
                 database.tripDaos().updateTripStateType(trip1.getId() , trip1.getStateType());
+                FIreBaseConnection con = new FIreBaseConnection();
+                con.addTripToHistory(trip1);
+                con.deleteTrip(trip1.getId());
                 tripList.remove(position);
                 notifyDataSetChanged();
             }
@@ -220,4 +236,33 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemCount() {
         return tripList.size();
     }
+
+
+    void startBubble(List<NoteModel> notes){
+        FloatingBubblePermissions.startPermissionRequest((Activity) context);
+
+        try {
+
+            FileOutputStream fos = context.openFileOutput("data.txt",MODE_PRIVATE);
+            DataOutputStream dos = new DataOutputStream(fos);
+            StringBuilder data = new StringBuilder();
+            for (NoteModel item : notes) {
+                data.append(item.getNote());
+                data.append("~");
+
+
+
+            }
+            dos.writeUTF(data.toString());
+            dos.flush();
+
+            dos.close();
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        context.startService(new Intent(context, SimpleService.class));
+    }
+
 }

@@ -108,31 +108,6 @@ public class AddNewTripActivity extends AppCompatActivity{
     public static final int Notification_id = 1;
     String timeTonotify;
 
-void startBubble(){
-    FloatingBubblePermissions.startPermissionRequest(this);
-
-    try {
-        final DataClass[] myListData = new DataClass[] {
-                new DataClass("one"),
-                new DataClass("two"),
-                new DataClass("three"),
-                new DataClass("four"),
-                new DataClass("five"),
-                new DataClass("six"),
-                new DataClass("seven"),
-                new DataClass("eight"),
-                new DataClass("nine"),
-                new DataClass("ten"),
-                new DataClass("eleven"),
-                new DataClass("twelve"),
-        };
-        FileOutputStream fos = openFileOutput("data.txt",MODE_PRIVATE);
-        DataOutputStream dos = new DataOutputStream(fos);
-        StringBuilder data = new StringBuilder();
-        for (DataClass item : myListData) {
-            data.append(item.getNoteText());
-            data.append("~");
-
     // The Entry point of the database
     private FirebaseDatabase mFirebaseDatabase;
     // The Database Reference
@@ -140,18 +115,6 @@ void startBubble(){
 
     String email;
 
-        }
-        dos.writeUTF(data.toString());
-        dos.flush();
-
-        dos.close();
-        fos.close();
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    startService(new Intent(this, SimpleService.class));
-}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -377,7 +340,7 @@ void startBubble(){
     // Hager code
 
     private void submit(){
-        startBubble();
+
         if(validate()){
               Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
 //            tempNewTrip = new NewTrip();
@@ -391,7 +354,7 @@ void startBubble(){
             //
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
-            tempNewTrip = new NewTrip();
+            //tempNewTrip = new NewTrip();
             try {
                 isSyncNeeded = Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
@@ -419,7 +382,7 @@ void startBubble(){
             setAlarm(tempNewTrip.getTripName(), tempNewTrip.getTripDate(), tempNewTrip.getEndPoint(), (int) id);
 
             if(!isSyncNeeded) {
-                     connection = new FIreBaseConnection();
+                connection = new FIreBaseConnection();
                 connection.addNewTrip(tempNewTrip);
             }
          //   connection.addNewTrip(tempNewTrip);

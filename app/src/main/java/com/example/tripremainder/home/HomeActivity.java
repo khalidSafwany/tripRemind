@@ -119,6 +119,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             isSecondryFragmentsActive = true;
 
         }
+        if(menuItem.getItemId() == R.id.sync){
+
+        }
+
         if (menuItem.getItemId() == R.id.logout) {
             AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
             builder.setTitle("LogOut Alert");
