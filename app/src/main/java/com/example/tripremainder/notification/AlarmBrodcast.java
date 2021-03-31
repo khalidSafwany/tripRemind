@@ -51,9 +51,10 @@ public class AlarmBrodcast extends BroadcastReceiver {
         mBuilder.setSmallIcon(R.drawable.ic_baseline_calendar_today_24);
         mBuilder.setAutoCancel(true);
         mBuilder.setOngoing(false);
-        mBuilder.setPriority(Notification.PRIORITY_HIGH);
+        mBuilder.setDefaults(Notification.DEFAULT_ALL);
+        mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         mBuilder.setOnlyAlertOnce(true);
-        mBuilder.build().flags = Notification.FLAG_NO_CLEAR | Notification.PRIORITY_HIGH | Notification.FLAG_AUTO_CANCEL;
+        mBuilder.build().flags = Notification.FLAG_NO_CLEAR | NotificationCompat.PRIORITY_HIGH | Notification.FLAG_AUTO_CANCEL;
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.addAction(R.mipmap.ic_launcher, "cancel", canelIntent);
         mBuilder.addAction(R.mipmap.ic_launcher, "Start", startIntent);

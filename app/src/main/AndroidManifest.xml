@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,56 +14,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripRemainder">
-
-
-        <activity
-            android:name=".home.HomeActivity"
-            android:theme="@style/Theme.TripRemainder.NoActionBar"
-            >
-        </activity>
-        <activity android:name=".auth.Sign_inActivity"
-            android:label="@string/title_activity_sign_in">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddNewTripActivity"></activity>
-        <activity android:name=".MainActivity">
-
+        <activity
+            android:name=".home.HomeActivity"
+            android:theme="@style/Theme.TripRemainder.NoActionBar"></activity>
+        <activity
+            android:name=".auth.Sign_inActivity"
+            android:label="@string/title_activity_sign_in">
         </activity>
+        <activity android:name=".AddNewTripActivity" />
+        <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".auth.Sign_upActivity"
-            android:label="@string/title_activity_sign_up">
-
-        </activity>
+            android:label="@string/title_activity_sign_up"></activity>
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+
         <receiver
             android:name=".notification.AlarmBrodcast"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <activity android:theme="@style/Theme.Transparent"
+
+        <activity
             android:name=".notification.CancelNotification"
             android:excludeFromRecents="true"
-            android:taskAffinity="">
-
-        </activity>
-        <activity android:theme="@style/Theme.Transparent"
-            android:name=".notification.StartMap" />
-
-        <activity android:name=".notes.AddNote">
-        </activity>
-
-
+            android:taskAffinity=""
+            android:theme="@style/Theme.Transparent"></activity>
+        <activity
+            android:name=".notification.StartMap"
+            android:theme="@style/Theme.Transparent" />
+        <activity android:name=".notes.AddNote"></activity>
     </application>
 
 </manifest>

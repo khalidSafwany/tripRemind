@@ -20,6 +20,9 @@ import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,14 @@ public class HomeFragment extends Fragment {
     private HomeAdapter adapter;
     RoomDB database;
     private List<NewTrip> tripList;
+
+
+    // The Entry point of the database
+    private FirebaseDatabase mFirebaseDatabase;
+    // The Database Reference
+    private DatabaseReference mDatabaseReference;
+
+    String email;
 
 
 
@@ -52,9 +63,16 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
+        //Database Authantication
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        if(mFirebaseDatabase == null){
+            mFirebaseDatabase = FirebaseDatabase.getInstance( );
+        }
+
         tripList = new ArrayList<>();
         database = RoomDB.getInstance(getContext());
-        //tripList = database.tripDaos().getUpcomingTrips();
 
         adapter = new HomeAdapter(getContext(),tripList);
         recyclerView.setAdapter(adapter);
@@ -68,7 +86,7 @@ public class HomeFragment extends Fragment {
 
             NewTrip result= (NewTrip) data.getSerializableExtra("result");
             tripList.clear();
-            tripList.addAll(database.tripDaos().getUpcomingTrips());
+            tripList.addAll(database.tripDaos().getUpcomingTrips(email));
             adapter.notifyDataSetChanged();
 
 
@@ -94,7 +112,7 @@ public class HomeFragment extends Fragment {
         super.onStart();
 
         tripList.clear();
-        tripList.addAll(database.tripDaos().getUpcomingTrips());
+        tripList.addAll(database.tripDaos().getUpcomingTrips(email));
         adapter.notifyDataSetChanged();
     }
 

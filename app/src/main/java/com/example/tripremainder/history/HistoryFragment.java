@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,12 @@ public class HistoryFragment extends Fragment {
     RoomDB database;
     private List<NewTrip> tripHistoryList;
     HistoryAdapter adapter;
+
+    // The Entry point of the database
+    private FirebaseDatabase mFirebaseDatabase;
+    // The Database Reference
+    private DatabaseReference mDatabaseReference;
+    String email;
 
 
     @Nullable
@@ -36,9 +45,16 @@ public class HistoryFragment extends Fragment {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        //Database Authantication
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        if(mFirebaseDatabase == null){
+            mFirebaseDatabase = FirebaseDatabase.getInstance( );
+        }
+
         tripHistoryList = new ArrayList<>();
         database = RoomDB.getInstance(getContext());
-        tripHistoryList = database.tripDaos().getHistoryTrips();
+        tripHistoryList = database.tripDaos().getHistoryTrips(email);
 
 
         adapter = new HistoryAdapter(getContext(),tripHistoryList);
@@ -55,7 +71,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-            tripHistoryList.addAll(database.tripDaos().getHistoryTrips());
+            tripHistoryList.addAll(database.tripDaos().getHistoryTrips(email));
             adapter.notifyDataSetChanged();
 
     }

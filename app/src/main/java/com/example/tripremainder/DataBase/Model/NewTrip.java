@@ -26,7 +26,42 @@ public class NewTrip implements Serializable {
     @ColumnInfo
     private String tripDate;
     @ColumnInfo
+    private String tripBackTime;
+    @ColumnInfo
+    private String tripBackDate;
+    @ColumnInfo
     private int state;
+
+    public String getTripBackTime() {
+        return tripBackTime;
+    }
+
+    public void setTripBackTime(String tripBackTime) {
+        this.tripBackTime = tripBackTime;
+    }
+
+    public String getTripBackDate() {
+        return tripBackDate;
+    }
+
+    public void setTripBackDate(String tripBackDate) {
+        this.tripBackDate = tripBackDate;
+    }
+
+    @ColumnInfo
+    private String direction;
+
+
+
+
+    public String getDirection() {
+        return direction;
+    }
+
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
     public int getState() {
         return state;

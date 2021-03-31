@@ -6,10 +6,12 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.tripremainder.DataBase.Daos.NoteDao;
 import com.example.tripremainder.DataBase.Daos.TripDaos;
 import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.Model.NoteModel;
 
-@Database(entities = {NewTrip.class} , version = 4 ,exportSchema = false)
+@Database(entities = {NewTrip.class , NoteModel.class} , version = 8 ,exportSchema = false)
  public abstract class RoomDB extends RoomDatabase {
 
         //Define Database Instance
@@ -29,6 +31,6 @@ import com.example.tripremainder.DataBase.Model.NewTrip;
 
         public abstract TripDaos tripDaos();
 
-
+        public abstract NoteDao noteDao();
 
 }

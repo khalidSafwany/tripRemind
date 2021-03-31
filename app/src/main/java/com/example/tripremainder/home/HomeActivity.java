@@ -50,11 +50,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.addDrawerListener(toggle);
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
-        //loadFragment(new HomeFragment());
-        // fragmentManager = getSupportFragmentManager();
-       // fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.add(R.id.fragmentContainer, new HomeFragment());
-        //fragmentTransaction.commit();// add the fragment
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         fragment = fragmentManager.findFragmentByTag("myFragmentTag");
