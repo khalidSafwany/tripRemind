@@ -356,7 +356,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             //connection.updateTrip(tempHomeList,"first");
             //tempNewTrip = new NewTrip();
             try {
-                isSyncNeeded = Connectivity.checkConnection();
+                isSyncNeeded = !Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

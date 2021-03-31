@@ -41,7 +41,7 @@ public class FloatingBubbleConfig {
 
     public static Builder getDefaultBuilder(Context context) {
         return new Builder()
-                .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.bubble_default_icon))
+                .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.earthsmall))
                 .removeBubbleIcon(ContextCompat.getDrawable(context, R.drawable.close_default_icon))
                 .bubbleIconDp(64)
                 .removeBubbleIconDp(64)

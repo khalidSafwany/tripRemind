@@ -10,12 +10,12 @@ import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubbleService;
 import androidx.core.content.ContextCompat;
 
 public class SimpleService extends FloatingBubbleService {
-   // @Override
+//    @Override
 //    protected FloatingBubbleConfig getConfig() {
 //        Context context = getApplicationContext();
 //
 //        return new FloatingBubbleConfig.Builder()
-//                .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.web_icon))
+//                .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.earthsmall))
 //                .removeBubbleIcon(ContextCompat.getDrawable(context, R.drawable.close_default_icon))
 //                .bubbleIconDp(54)
 //                .expandableView(getInflater().inflate(R.layout.activity_home, null))
