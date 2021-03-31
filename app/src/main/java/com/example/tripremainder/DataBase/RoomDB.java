@@ -11,7 +11,7 @@ import com.example.tripremainder.DataBase.Daos.TripDaos;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.Model.NoteModel;
 
-@Database(entities = {NewTrip.class , NoteModel.class} , version = 9 ,exportSchema = false)
+@Database(entities = {NewTrip.class , NoteModel.class} , version = 10 ,exportSchema = false)
  public abstract class RoomDB extends RoomDatabase {
 
         //Define Database Instance

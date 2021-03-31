@@ -44,7 +44,6 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
 
-
     // RecyclerView recyclerView;
     public HomeAdapter(Context context,List<NewTrip> listdata) {
         this.context = context;
@@ -86,6 +85,7 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 intent.putExtra("tripdate",trip.getTripDate());
                 intent.putExtra("triptime",trip.getTripTime());
                 intent.putExtra("tripstate",trip.getStateType());
+                intent.putExtra("tripId",trip.getId());
                 context.startActivity(intent);
             }
         });
@@ -125,27 +125,18 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onClick(View view)  {
 
-                NewTrip trip = tripList.get(holder.getAdapterPosition());
-                //database.tripDaos().delete(trip);
-                trip.setState(2);
-                trip.setStateType("Cancelled");
-                database.tripDaos().updateTripState(trip.getId() , trip.getState());
-                database.tripDaos().updateTripStateType(trip.getId() , trip.getStateType());
-                notifyDataSetChanged();
-                FIreBaseConnection conn = new FIreBaseConnection();
-                conn.deleteTrip(trip.getId());
-                tripList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,tripList.size());
                 androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
                 builder.setTitle("Delete Trip");
                 builder.setMessage("Are you sure to Delete Trip??");
+                builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         NewTrip trip = tripList.get(position);
                         trip.setState(2);
+                        trip.setStateType("Cancelled");
                         database.tripDaos().updateTripState(trip.getId() , trip.getState());
+                        database.tripDaos().updateTripStateType(trip.getId() , trip.getStateType());
                         tripList.remove(position);
                         notifyDataSetChanged();
                         FIreBaseConnection conn = new FIreBaseConnection();

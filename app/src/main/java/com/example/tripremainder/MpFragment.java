@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 public class MpFragment extends Fragment {
@@ -52,8 +53,9 @@ public class MpFragment extends Fragment {
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
     NewTrip newTrip;
     private RoomDB database;
-    private LatLng[] latLngs;
-    private LatLng[] latLngp;
+    //private LatLng[] latLngs;
+    private GoogleMap mMap;
+
 
     private List<NewTrip> tripHistoryList;
     PolylineOptions polylineOptions ;
@@ -64,21 +66,21 @@ public class MpFragment extends Fragment {
         polylineOptions =new PolylineOptions();
         tripHistoryList = new ArrayList<>();
         tripHistoryList = database.tripDaos().getHistoryTrips();
-        latLngs = new LatLng[tripHistoryList.size()];
-        latLngp = new LatLng[tripHistoryList.size()];
-        if(!tripHistoryList.isEmpty()){
-        for(int i=0;i<tripHistoryList.size();i++){
-            LatLng latLng =new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong());
-            LatLng latLng1 =new LatLng(tripHistoryList.get(i).getEndPointlat(),tripHistoryList.get(i).getEndPointLong());
-
-            latLngs[i] = latLng;
-            latLngp[i] = latLng1;
-           // polylineOptions.add(new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong()));
-        }}
-        else{
-            Toast.makeText(getContext(),"Missing Trip Location",Toast.LENGTH_SHORT).show();
-
-        }
+        //latLngs = new LatLng[tripHistoryList.size()];
+        //latLngp = new LatLng[tripHistoryList.size()];
+//        if(!tripHistoryList.isEmpty()){
+//        for(int i=0;i<tripHistoryList.size();i++){
+//            LatLng latLng =new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong());
+//            LatLng latLng1 =new LatLng(tripHistoryList.get(i).getEndPointlat(),tripHistoryList.get(i).getEndPointLong());
+//
+//            latLngs[i] = latLng;
+//            latLngp[i] = latLng1;
+//           // polylineOptions.add(new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong()));
+//        }}
+//        else{
+//            Toast.makeText(getContext(),"Missing Trip Location",Toast.LENGTH_SHORT).show();
+//
+//        }
     }
 
     @Override
@@ -104,33 +106,63 @@ public class MpFragment extends Fragment {
                 //  markerOptions.position(latLng);
                 //   markerOptions.title(latLng.latitude +" : "+latLng.longitude);
                 //  googleMap.clear();
-                Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
-                        .clickable(true)
-                        .add(latLngs));
-              //  Polyline polyline2 = googleMap.addPolyline(polylineOptions);
-                polyline1.setTag("A");
-                // [END maps_poly_activity_add_polyline_set_tag]
-                // Style the polyline.
-                  stylePolyline(polyline1);
 
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                       new LatLng(30.033333,31.233334),5
-                ));
-                googleMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-                    @Override
-                    public void onPolylineClick(Polyline polyline) {
-                        if ((polyline.getPattern() == null) || (!polyline.getPattern().contains(DOT))) {
-                            polyline.setPattern(PATTERN_POLYLINE_DOTTED);
-                        } else {
-                            // The default pattern is a solid stroke.
-                            polyline.setPattern(null);
-                        }
-                    }
-                });
+//                Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+//                        .clickable(true)
+//                        .add(latLngs));
+//              //  Polyline polyline2 = googleMap.addPolyline(polylineOptions);
+//                polyline1.setTag("A");
+//                // [END maps_poly_activity_add_polyline_set_tag]
+//                // Style the polyline.
+//                  stylePolyline(polyline1);
+//
+//                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                       new LatLng(30.033333,31.233334),4
+//                ));
+//                googleMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+//                    @Override
+//                    public void onPolylineClick(Polyline polyline) {
+//                        if ((polyline.getPattern() == null) || (!polyline.getPattern().contains(DOT))) {
+//                            polyline.setPattern(PATTERN_POLYLINE_DOTTED);
+//                        } else {
+//                            // The default pattern is a solid stroke.
+//                            polyline.setPattern(null);
+//                        }
+//                    }
+//                });
 
                 //  googleMap.addMarker(markerOptions);
                 // }
                 //   });
+                mMap = googleMap;
+
+                // Add a marker in Sydney and move the camera
+                //LatLng sydney = new LatLng(-34, 151);
+
+                //LatLng sydney = new LatLng(-34, 151);
+                for(int i =0 ; i <tripHistoryList.size();i++) {
+                    //trips = new ArrayList<>();
+                    if (tripHistoryList.get(i).getStateType().equals("Done")){
+                    Random rnd = new Random();
+                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+
+                    Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+                            .clickable(true)
+                            .add(
+                                    new LatLng(tripHistoryList.get(i).getStartPointlat(), tripHistoryList.get(i).getStartPointLong()),
+                                    new LatLng(tripHistoryList.get(i).getEndPointlat(), tripHistoryList.get(i).getEndPointLong())
+
+                            ).color(color));
+                    // [END maps_poly_activity_add_polyline]
+                    // [START_EXCLUDE silent]
+                    // Store a data object with the polyline, used here to indicate an arbitrary type.
+                    polyline1.setTag("A");
+                }
+
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                      new LatLng(30.033333,31.233334),4
+              ));
             }
         });
 

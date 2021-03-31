@@ -30,14 +30,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
        TextView textView;
-       ImageView btDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_view);
-            btDelete = itemView.findViewById(R.id.bt_delete);
+
         }
     }
     @NonNull
@@ -55,18 +54,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         NoteModel note = dataList.get(position);
         holder.textView.setText(note.getNote());
 
-        holder.btDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NoteModel d = dataList.get(position);
-                database.noteDao().delete(d);
-                int postion = holder.getAdapterPosition();
-                dataList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,dataList.size());
-
-            }
-        });
+//        holder.btDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NoteModel d = dataList.get(position);
+//                database.noteDao().delete(d);
+//                int postion = holder.getAdapterPosition();
+//                dataList.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position,dataList.size());
+//
+//            }
+//        });
     }
 
     @Override

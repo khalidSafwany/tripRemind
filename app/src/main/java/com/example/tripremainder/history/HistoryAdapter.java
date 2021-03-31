@@ -22,6 +22,7 @@ import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.home.HomeActivity;
+import com.example.tripremainder.home.details.DetailsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -53,22 +54,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
+        NewTrip trip = tripList.get(position);
 
         database = RoomDB.getInstance(con);
 
-        holder.tripName.setText(tripList.get(position).getTripName());
-        holder.startPoint.setText(tripList.get(position).getStartPoint());
-        holder.endPoint.setText(tripList.get(position).getEndPoint());
-        holder.tripTime.setText(tripList.get(position).getTripTime());
-        holder.tripDate.setText(tripList.get(position).getTripDate());
-        holder.status.setText(tripList.get(position).getStateType());
-        Toast.makeText(context, "click on item: " + tripList.get(position).getStateType(), Toast.LENGTH_SHORT).show();
-       // holder.status.setText(listdata[position].getStatus());
+        holder.tripName.setText(trip.getTripName());
+        holder.startPoint.setText(trip.getStartPoint());
+        holder.endPoint.setText(trip.getEndPoint());
+        holder.tripTime.setText(trip.getTripTime());
+        holder.tripDate.setText(trip.getTripDate());
+        holder.status.setText(trip.getStateType());
+
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "click on item: " + tripList.get(position).getTripName(), Toast.LENGTH_SHORT).show();
-            }
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("tripname",trip.getTripName());
+                intent.putExtra("tripstart",trip.getStartPoint());
+                intent.putExtra("tripend",trip.getEndPoint());
+                intent.putExtra("tripdate",trip.getTripDate());
+                intent.putExtra("triptime",trip.getTripTime());
+                intent.putExtra("tripstate",trip.getStateType());
+                intent.putExtra("tripId",trip.getId());
+                context.startActivity(intent);            }
         });
         Log.i(TAG, "onBindViewHolder:");
 
@@ -78,12 +86,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Delete Trip");
                 builder.setMessage("Are you sure to Delete Trip ??");
+                builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        NewTrip trip = tripList.get(holder.getAdapterPosition());
+                        NewTrip trip = tripList.get(position);
                         database.tripDaos().delete(trip);
-                        int postion = holder.getAdapterPosition();
                         tripList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position,tripList.size());

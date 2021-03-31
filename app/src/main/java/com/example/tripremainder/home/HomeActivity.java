@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,7 @@ import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.history.HistoryFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentItemSelectedListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -38,9 +41,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
     boolean isSecondryFragmentsActive;
-
-
-
+    View headerView;
+    TextView headerEmail;
+    private FirebaseDatabase mFirebaseDatabase;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Home");
         navigationView = findViewById(R.id.nested);
+        headerView = navigationView.getHeaderView(0);
+        headerEmail = headerView.findViewById(R.id.UserEmail);
         navigationView.setNavigationItemSelectedListener(this);
+
         isSecondryFragmentsActive = false;
 
         drawer = findViewById(R.id.drawer);
@@ -68,6 +75,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             fragmentTransaction.commit();
         }
 
+        if(mFirebaseDatabase == null){
+            mFirebaseDatabase = FirebaseDatabase.getInstance( );
+        }
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        headerEmail.setText(email);
     }
 
 

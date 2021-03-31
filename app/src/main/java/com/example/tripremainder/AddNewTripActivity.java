@@ -312,6 +312,8 @@ public class AddNewTripActivity extends AppCompatActivity{
             startLocationEditText.setText(place.getAddress());
             tempNewTrip.setStartPointlat(place.getLatLng().latitude);
             tempNewTrip.setStartPointLong(place.getLatLng().longitude);
+            Log.i("TAG", "onActivityResult: "+ place.getLatLng().latitude);
+            Log.i("TAG", "onActivityResult: "+ place.getLatLng().longitude);
 
         }
         else if (requestCode == 121 && resultCode == RESULT_OK) {
@@ -320,6 +322,8 @@ public class AddNewTripActivity extends AppCompatActivity{
             endLocationEditText.setText(place.getAddress());
             tempNewTrip.setEndPointlat(place.getLatLng().latitude);
             tempNewTrip.setEndPointLong(place.getLatLng().longitude);
+            Log.i("TAG", "onActivityResult: "+ place.getLatLng().latitude);
+            Log.i("TAG", "onActivityResult: "+ place.getLatLng().longitude);
 
         }
         else if(resultCode == AutocompleteActivity.RESULT_ERROR)
@@ -334,9 +338,6 @@ public class AddNewTripActivity extends AppCompatActivity{
     private void submit(){
         if(validate()){
               Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-
-            tempNewTrip = new NewTrip();
-            Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
 //            tempNewTrip = new NewTrip();
 //            tempNewTrip.setTripName(tripNameEditText.getText().toString());
 //            tempNewTrip.setStartPoint(startLocationEditText.getText().toString());
@@ -459,28 +460,25 @@ public class AddNewTripActivity extends AppCompatActivity{
 
     }
 
-    private void showTimePicker1(){
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(AddNewTripActivity.this);
+    private void showTimePicker1() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                timeTonotify = i + ":" + i1;
+                timeText.setText(timeTonotify);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(AddNewTripActivity.this, (
-                timePicker, hourOfDay, minutes) -> {
-            String dateString = hourOfDay+" : "+ minutes;
-            timeText1.setText(dateString);
-
-        },
-                hour,
-                minute,
-                is24HourFormat);
+            }
+        }, hour, minute, false);
         timePickerDialog.setTitle("Set your trip start time");
         timePickerDialog.show();
 
     }
 
 
-    private void showDatePicker() {
+            private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -503,11 +501,13 @@ public class AddNewTripActivity extends AppCompatActivity{
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(AddNewTripActivity.this,
-                (datePicker, year1, month1, day) -> {
-                    String dateString = day + "/" + month+1 + "/" + year;
-                    dateText1.setText(dateString);
-                }, year, month, dayOfMonth);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                dateText.setText(day + "-" + (month + 1) + "-" + year);
+            }
+        }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.setTitle("Set your trip date");
         datePickerDialog.show();
