@@ -116,6 +116,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
             builder.setTitle("LogOut Alert");
             builder.setMessage("Are you sure to log out ??");
+            builder.setCancelable(false);
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -156,7 +157,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             else{
                 isSecondryFragmentsActive = false;
             }
-            super.onBackPressed();
+           // super.onBackPressed();
+            loadFragment(new HomeFragment());
             getSupportActionBar().setTitle("Home");
         }
 

@@ -1,6 +1,7 @@
 package com.example.tripremainder;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
@@ -42,7 +44,7 @@ public class MpFragment extends Fragment {
     SupportMapFragment mapFragment;
     Marker markerPerth;
     private LatLng location;
-    private static final int COLOR_BLACK_ARGB = 0xff000000;
+    private static final int COLOR_BLACK_ARGB = Color.RED;
     private static final int POLYLINE_STROKE_WIDTH_PX = 12;
     private static final int PATTERN_GAP_LENGTH_PX = 20;
     private static final PatternItem DOT = new Dot();
@@ -50,14 +52,33 @@ public class MpFragment extends Fragment {
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
     NewTrip newTrip;
     private RoomDB database;
+    private LatLng[] latLngs;
+    private LatLng[] latLngp;
 
     private List<NewTrip> tripHistoryList;
+    PolylineOptions polylineOptions ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = RoomDB.getInstance(getContext());
+        polylineOptions =new PolylineOptions();
         tripHistoryList = new ArrayList<>();
         tripHistoryList = database.tripDaos().getHistoryTrips();
+        latLngs = new LatLng[tripHistoryList.size()];
+        latLngp = new LatLng[tripHistoryList.size()];
+        if(!tripHistoryList.isEmpty()){
+        for(int i=0;i<tripHistoryList.size();i++){
+            LatLng latLng =new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong());
+            LatLng latLng1 =new LatLng(tripHistoryList.get(i).getEndPointlat(),tripHistoryList.get(i).getEndPointLong());
+
+            latLngs[i] = latLng;
+            latLngp[i] = latLng1;
+           // polylineOptions.add(new LatLng(tripHistoryList.get(i).getStartPointlat(),tripHistoryList.get(i).getStartPointLong()));
+        }}
+        else{
+            Toast.makeText(getContext(),"Missing Trip Location",Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -72,7 +93,7 @@ public class MpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        location = new LatLng(31, 29);
+       // location = new LatLng(31, 29);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -85,22 +106,15 @@ public class MpFragment extends Fragment {
                 //  googleMap.clear();
                 Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
                         .clickable(true)
-                        .add(
-
-                             // endPoint = (newTrip.getEndPoint();
-                              //  new LatLng(newTrip.getStartPoint()., 143.321),
-                                new LatLng(-34.747, 145.592),
-                                new LatLng(-34.364, 147.891),
-                                new LatLng(-33.501, 150.217),
-                                new LatLng(-32.306, 149.248),
-                                new LatLng(-32.491, 147.309)));
+                        .add(latLngs));
+              //  Polyline polyline2 = googleMap.addPolyline(polylineOptions);
                 polyline1.setTag("A");
                 // [END maps_poly_activity_add_polyline_set_tag]
                 // Style the polyline.
-                //  stylePolyline(polyline1);
+                  stylePolyline(polyline1);
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(-23.684, 133.903),4
+                       new LatLng(30.033333,31.233334),5
                 ));
                 googleMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
                     @Override
@@ -111,7 +125,6 @@ public class MpFragment extends Fragment {
                             // The default pattern is a solid stroke.
                             polyline.setPattern(null);
                         }
-                        // Toast.makeText(this, "Route type " + polyline.getTag().toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -130,15 +143,6 @@ public class MpFragment extends Fragment {
             type = polyline.getTag().toString();
         }
 
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "A":
-                // Use a custom bitmap as the cap at the start of the line.
-                polyline.setStartCap(
-                        new CustomCap(
-                                BitmapDescriptorFactory.fromResource(R.drawable.ic_history), 10));
-                break;
-        }
 
         polyline.setEndCap(new RoundCap());
         polyline.setWidth(POLYLINE_STROKE_WIDTH_PX);
@@ -146,28 +150,6 @@ public class MpFragment extends Fragment {
         polyline.setJointType(JointType.ROUND);
     }
 
-    public LatLng getLocationFromAddress(Context context, String strAddress) {
 
-        Geocoder coder = new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try {
-            // May throw an IOException
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
-                return null;
-            }
-
-            Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
-
-        } catch (IOException ex) {
-
-            ex.printStackTrace();
-        }
-
-        return p1;
-    }
 
 }

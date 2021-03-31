@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.tripremainder.DataBase.Daos.TripDaos;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 
-@Database(entities = {NewTrip.class} , version = 4 ,exportSchema = false)
+@Database(entities = {NewTrip.class} , version = 6 ,exportSchema = false)
  public abstract class RoomDB extends RoomDatabase {
 
         //Define Database Instance

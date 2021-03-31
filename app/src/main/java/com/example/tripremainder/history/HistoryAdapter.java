@@ -52,6 +52,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
         holder.endPoint.setText(tripList.get(position).getEndPoint());
         holder.tripTime.setText(tripList.get(position).getTripTime());
         holder.tripDate.setText(tripList.get(position).getTripDate());
+        holder.status.setText(tripList.get(position).getStateType());
+        Toast.makeText(context, "click on item: " + tripList.get(position).getStateType(), Toast.LENGTH_SHORT).show();
        // holder.status.setText(listdata[position].getStatus());
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override

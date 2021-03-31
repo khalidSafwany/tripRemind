@@ -41,6 +41,9 @@ public interface TripDaos {
     @Query("UPDATE newtrip set state = :state WHERE id = :id")
     void updateTripState(int id ,int state);
 
+    @Query("UPDATE newtrip set stateType = :stateType WHERE id = :id")
+    void updateTripStateType(int id ,String stateType);
+
     @Query("select * from NewTrip where state = 0")
     List<NewTrip> getUpcomingTrips();
 

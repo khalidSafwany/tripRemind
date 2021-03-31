@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -50,10 +51,14 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
 
                 newTrip = database.tripDaos().getTripById((int) id);
                 newTrip.setState(1);
+                newTrip.setStateType("Done");
+
                 database.tripDaos().updateTripState(newTrip.getId() , newTrip.getState());
+                database.tripDaos().updateTripStateType(newTrip.getId() , newTrip.getStateType());
+
                 //database.tripDaos().delete(newTrip);
                 //tripList.remove(newTrip.getId());
-              Uri gmmIntentUri = Uri.parse("geo:0,0?q="+triploc);
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+triploc);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
@@ -80,6 +85,12 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                newTrip = database.tripDaos().getTripById((int) id);
+                newTrip.setState(2);
+                newTrip.setStateType("Cancelled");
+                database.tripDaos().updateTripState(newTrip.getId() , newTrip.getState());
+                database.tripDaos().updateTripStateType(newTrip.getId() , newTrip.getStateType());
+
                 dialog.dismiss();
                 getActivity().finishAffinity();
 
