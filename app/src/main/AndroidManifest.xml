@@ -60,15 +60,24 @@
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <activity android:theme="@style/Theme.Transparent"
+            android:name=".notification.CancelNotification"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
 
+        </activity>
+        <activity android:theme="@style/Theme.Transparent"
+            android:name=".notification.StartMap" />
 
+        <activity android:name=".notes.AddNote">
+        </activity>
 
+        <service android:name=".SimpleService" />
+        <activity android:name=".HiActivty" android:theme="@style/Theme.AppCompat.Dialog"></activity>
         <activity android:name=".notes.AddNote"></activity>
         <receiver
             android:name=".notification.DialogCast"

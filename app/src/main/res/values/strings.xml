@@ -23,6 +23,8 @@
     <string name="Communication">Communication</string>
     <string name="General">General</string>
     <string name="title_activity_sign_up">Sign_upActivity</string>
+    <string name="remove_bubble_description">Remove Floating Bubble</string>
+    <string name="floating_bubble_description">Floating Bubble</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

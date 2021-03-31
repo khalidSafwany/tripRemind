@@ -1,0 +1,59 @@
+package com.bubbles
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+
+
+    defaultConfig {
+        minSdkVersion 29
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    implementation 'com.android.support:support-core-utils:28.0.0'
+//    implementation 'com.android.support:support-v4:28.0.0'
+//    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+publish {
+    def groupProjectID = 'com.siddharthks.com.bubbles'
+    def artifactProjectID = 'com.bubbles'
+    def publishVersionID = '1.0.0'
+
+    userOrg = 'ssiddharth2010'
+    repoName = 'Bubbles'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = ' ⚡️A library for adding messenger style floating com.bubbles to any android application 📲'
+    website = 'https://github.com/siddharth2010/com.bubbles'
+}

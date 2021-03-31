@@ -23,7 +23,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.room.Database;
 
+import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.MpFragment;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
@@ -31,6 +35,8 @@ import com.example.tripremainder.history.HistoryFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentItemSelectedListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -119,6 +125,17 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             isSecondryFragmentsActive = true;
 
         }
+        if(menuItem.getItemId() == R.id.sync){
+            FIreBaseConnection con = new FIreBaseConnection();
+
+            ArrayList<NewTrip> syncData  = con.getTripsFromFireBase();
+            RoomDB databse =  RoomDB.getInstance(this);
+            for(NewTrip item:syncData){
+                databse.tripDaos().insertTrip( item);
+            }
+
+        }
+
         if (menuItem.getItemId() == R.id.logout) {
             AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
             builder.setTitle("LogOut Alert");

@@ -3,7 +3,12 @@ package com.example.tripremainder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
+import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
 import com.example.tripremainder.Connectivity.Connectivity;
+
+import com.bubbles.*;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -50,6 +55,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -101,7 +108,6 @@ public class AddNewTripActivity extends AppCompatActivity{
     public static final int Notification_id = 1;
     String timeTonotify;
 
-
     // The Entry point of the database
     private FirebaseDatabase mFirebaseDatabase;
     // The Database Reference
@@ -120,7 +126,7 @@ public class AddNewTripActivity extends AppCompatActivity{
 
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
-        connection = new FIreBaseConnection();
+
 
         //Database Authantication
 
@@ -147,8 +153,6 @@ public class AddNewTripActivity extends AppCompatActivity{
 
 
     }
-
-
 
 
 
@@ -286,7 +290,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     private  void setUpdateView(){
         addTripBtn.setVisibility(View.INVISIBLE);
         addTripBtn.setEnabled(false);
-        tripNameEditText.setText("iioiiiiiiii");
+        tripNameEditText.setText(tripToBeUpdated.getTripName());
         startLocationEditText.setText(tripToBeUpdated.getStartPoint());
         endLocationEditText.setText(tripToBeUpdated.getEndPoint());
         timeText.setText(tripToBeUpdated.getTripTime());
@@ -336,6 +340,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     // Hager code
 
     private void submit(){
+
         if(validate()){
               Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
 //            tempNewTrip = new NewTrip();
@@ -349,8 +354,9 @@ public class AddNewTripActivity extends AppCompatActivity{
             //
             //connection.deleteTrip();
             //connection.updateTrip(tempHomeList,"first");
+            //tempNewTrip = new NewTrip();
             try {
-                isSyncNeeded = Connectivity.checkConnection();
+                isSyncNeeded = !Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -376,6 +382,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             setAlarm(tempNewTrip.getTripName(), tempNewTrip.getTripDate(), tempNewTrip.getEndPoint(), (int) id);
 
             if(!isSyncNeeded) {
+                connection = new FIreBaseConnection();
                 connection.addNewTrip(tempNewTrip);
             }
          //   connection.addNewTrip(tempNewTrip);
@@ -468,7 +475,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 timeTonotify = i + ":" + i1;
-                timeText.setText(timeTonotify);
+                timeText1.setText(timeTonotify);
 
             }
         }, hour, minute, false);
@@ -505,7 +512,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                dateText.setText(day + "-" + (month + 1) + "-" + year);
+                dateText1.setText(day + "-" + (month + 1) + "-" + year);
             }
         }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());

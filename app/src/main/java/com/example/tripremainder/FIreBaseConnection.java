@@ -81,24 +81,27 @@ public class FIreBaseConnection {
     }
 
 
-    public void getTripsFromFireBase(){
+    public ArrayList<NewTrip> getTripsFromFireBase(){
+        ArrayList<NewTrip> syncData = new ArrayList<>();
         databaseRef.child(usersPath).child(userId).child(comingTripsPath).get().addOnCompleteListener(task1 -> {
-            ArrayList<NewTrip>comingTrips = new ArrayList<>();
+
             for(DataSnapshot ds : task1.getResult().getChildren()) {
                 NewTrip tempTrip = ds.getValue(NewTrip.class);
-                comingTrips.add(tempTrip);
+                syncData.add(tempTrip);
             }
+
                     });
 
             databaseRef.child(usersPath).child(userId).child(historyTripsPath).get().addOnCompleteListener(task2 -> {
-                ArrayList<NewTrip>historyTrips = new ArrayList<>();
+
                 for(DataSnapshot ds : task2.getResult().getChildren()) {
                     NewTrip tempTrip = ds.getValue(NewTrip.class);
-                    historyTrips.add(tempTrip);
+                    syncData.add(tempTrip);
                 }
 
         });
 
+        return syncData;
     }
 
 
