@@ -30,6 +30,9 @@ import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +47,11 @@ public class HomeFragment extends Fragment {
     private HomeAdapter adapter;
     RoomDB database;
     private List<NewTrip> tripList;
+
+    // The Entry point of the database
+    private FirebaseDatabase mFirebaseDatabase;
+
+    String email;
 
     private static boolean isSyncNeeded = false;
     private final static String isSyncNeededString = "sync";
@@ -67,6 +75,9 @@ void SyncData(){
     void showSyncDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("Sync");
+
+
+
 
 // Set up the input
         builder.setMessage("Some Trips may be changed with no connection on \n Do you want to sync you data now?");
@@ -101,6 +112,8 @@ void SyncData(){
         floatButtonAction = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         floatButtonAction.setOnClickListener(v->{
             Intent addTripIntent = new Intent(getActivity(), AddNewTripActivity.class);
+           // addTripIntent.putExtra("id" , NewTrip.getId());
+
             startActivityForResult(addTripIntent,200);
         });
         RecyclerView recyclerView =(RecyclerView) view.findViewById(R.id.home_RV);
@@ -108,6 +121,14 @@ void SyncData(){
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+
+        //Database Authantication
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        if(mFirebaseDatabase == null){
+            mFirebaseDatabase = FirebaseDatabase.getInstance( );
+        }
 
         tripList = new ArrayList<>();
         database = RoomDB.getInstance(getContext());
@@ -139,7 +160,9 @@ void SyncData(){
             isSyncNeeded = data.getBooleanExtra(isSyncNeededString,false);
             NewTrip result= (NewTrip) data.getSerializableExtra("result");
             tripList.clear();
+            tripList.addAll(database.tripDaos().getUpcomingTrips(email));
             tripList.addAll(database.tripDaos().getUpcomingTrips());
+
             adapter.notifyDataSetChanged();
 
 
@@ -165,7 +188,7 @@ void SyncData(){
         super.onStart();
 
         tripList.clear();
-        tripList.addAll(database.tripDaos().getUpcomingTrips());
+        tripList.addAll(database.tripDaos().getUpcomingTrips(email));
         adapter.notifyDataSetChanged();
     }
 

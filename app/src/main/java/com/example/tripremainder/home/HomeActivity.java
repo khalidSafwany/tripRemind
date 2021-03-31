@@ -1,9 +1,15 @@
 package com.example.tripremainder.home;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,12 +22,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.tripremainder.MpFragment;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.history.HistoryFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentItemSelectedListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -32,9 +41,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
     boolean isSecondryFragmentsActive;
-
-
-
+    View headerView;
+    TextView headerEmail;
+    private FirebaseDatabase mFirebaseDatabase;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Home");
         navigationView = findViewById(R.id.nested);
+        headerView = navigationView.getHeaderView(0);
+        headerEmail = headerView.findViewById(R.id.UserEmail);
         navigationView.setNavigationItemSelectedListener(this);
+
         isSecondryFragmentsActive = false;
 
         drawer = findViewById(R.id.drawer);
@@ -52,11 +65,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         drawer.addDrawerListener(toggle);
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
-        //loadFragment(new HomeFragment());
-        // fragmentManager = getSupportFragmentManager();
-       // fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.add(R.id.fragmentContainer, new HomeFragment());
-        //fragmentTransaction.commit();// add the fragment
         fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         fragment = fragmentManager.findFragmentByTag("myFragmentTag");
@@ -67,6 +75,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             fragmentTransaction.commit();
         }
 
+        if(mFirebaseDatabase == null){
+            mFirebaseDatabase = FirebaseDatabase.getInstance( );
+        }
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        headerEmail.setText(email);
     }
 
 
@@ -101,6 +114,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         }
         if (menuItem.getItemId() == R.id.map) {
+            loadFragment(new MpFragment());
             getSupportActionBar().setTitle("Map");
             isSecondryFragmentsActive = true;
 
@@ -109,6 +123,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
             builder.setTitle("LogOut Alert");
             builder.setMessage("Are you sure to log out ??");
+            builder.setCancelable(false);
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -149,9 +164,35 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             else{
                 isSecondryFragmentsActive = false;
             }
-            super.onBackPressed();
+           // super.onBackPressed();
+            loadFragment(new HomeFragment());
             getSupportActionBar().setTitle("Home");
         }
 
+    }
+    BroadcastReceiver bgshowBroacast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String extra = intent.getStringExtra("BROADCAST");
+            if (extra != null) {
+                if (extra.equalsIgnoreCase("finishBgShowActivity")) {
+
+                    finish();
+                    Log.i("TAG", "onReceive: Bg_show_BroadCast receive from bg_send class ");
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(HomeActivity.this).registerReceiver(bgshowBroacast, new IntentFilter("BG_SHOW_BROADCAST"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(HomeActivity.this).unregisterReceiver(bgshowBroacast);
     }
 }

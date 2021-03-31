@@ -11,30 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.tripremainder.DataBase.Model.NoteModel;
+import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.R;
 
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
-    private List<NoteList> dataList;
+    private List<NoteModel> dataList;
     private Context context;
-    //private RoomDB database;
+    private RoomDB database;
 
-    public NoteAdapter(List<NoteList> dataList, Context context) {
+
+    public NoteAdapter(List<NoteModel> dataList, Context context) {
         this.dataList = dataList;
         this.context = context;
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
        TextView textView;
-       ImageView btDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_view);
-            btDelete = itemView.findViewById(R.id.bt_delete);
+
         }
     }
     @NonNull
@@ -42,29 +44,28 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_main,parent,false);
 
+        database = RoomDB.getInstance(context);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
        // MainData data = dataList.get(position);
-        NoteList note = dataList.get(position);
-        holder.textView.setText(note.getText());
+        NoteModel note = dataList.get(position);
+        holder.textView.setText(note.getNote());
 
-        holder.btDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*
-                MainData d = dataList.get(holder.getAdapterPosition());
-                database.mainDao().delete(d);
-                int postion = holder.getAdapterPosition();
-                dataList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,dataList.size());
-
-                 */
-            }
-        });
+//        holder.btDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NoteModel d = dataList.get(position);
+//                database.noteDao().delete(d);
+//                int postion = holder.getAdapterPosition();
+//                dataList.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position,dataList.size());
+//
+//            }
+//        });
     }
 
     @Override

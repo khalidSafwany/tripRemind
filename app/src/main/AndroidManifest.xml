@@ -2,10 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tripremainder">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,34 +17,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripRemainder">
-
-
+        <activity android:name=".home.details.DetailsActivity"></activity>
         <activity
             android:name=".home.HomeActivity"
-            android:theme="@style/Theme.TripRemainder.NoActionBar"
-            >
-        </activity>
-        <activity android:name=".auth.Sign_inActivity"
-            android:label="@string/title_activity_sign_in">
+            android:theme="@style/Theme.TripRemainder.NoActionBar"></activity>
+        <activity
+            android:name=".auth.Sign_inActivity"
+            android:label="@string/title_activity_sign_in"></activity>
+        <activity android:name=".SplashScreen"
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddNewTripActivity"></activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".AddNewTripActivity" />
+        <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".auth.Sign_upActivity"
-            android:label="@string/title_activity_sign_up">
-
-        </activity>
+            android:label="@string/title_activity_sign_up"></activity>
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBp6LRReGxwT3lB37KzWi0p0rBu88MBzKY" />
+
+        <activity
+            android:name=".notification.DialogNotification"
+            android:theme="@style/Theme.Transparent"></activity>
+        <activity
+            android:name=".notification.DialogMessageActivity"
+            android:theme="@style/Theme.Transparent"></activity>
+
+
         <receiver
             android:name=".notification.AlarmBrodcast"
             android:enabled="true">
@@ -64,6 +76,17 @@
 
         <service android:name=".SimpleService" />
         <activity android:name=".HiActivty" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".notes.AddNote"></activity>
+        <receiver
+            android:name=".notification.DialogCast"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

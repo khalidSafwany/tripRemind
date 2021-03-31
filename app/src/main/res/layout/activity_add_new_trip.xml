@@ -89,7 +89,6 @@
         android:tint="@color/purple_500"
         app:layout_constraintStart_toStartOf="@+id/outlinedTextField3"
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3"
-
         app:srcCompat="@drawable/ic_baseline_calendar_today_24" />
 
     <TextView
@@ -123,6 +122,7 @@
         app:layout_constraintStart_toStartOf="@+id/timeButton"
         app:layout_constraintTop_toBottomOf="@+id/timeButton" />
 
+
     <Spinner
         android:id="@+id/tripTypeSpinner"
         android:layout_width="159dp"
@@ -133,25 +133,73 @@
         app:layout_constraintTop_toBottomOf="@+id/outlinedTextField3" />
 
 
+    <ImageButton
+        android:id="@+id/calenderButton1"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@color/white"
+        android:foregroundTint="@color/purple_500"
+        android:tint="@color/purple_500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DateTextView"
+        app:srcCompat="@drawable/ic_baseline_calendar_today_24" />
+
+    <TextView
+        android:id="@+id/DateTextView1"
+        android:layout_width="74dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/timeText1"
+        app:layout_constraintEnd_toEndOf="@+id/calenderButton1"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="@+id/calenderButton1"
+        app:layout_constraintTop_toBottomOf="@+id/calenderButton1" />
+
+    <ImageButton
+        android:id="@+id/timeButton1"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/timeText"
+        app:layout_constraintTop_toBottomOf="@+id/timeText"
+        app:srcCompat="@drawable/ic_baseline_watch_later_24" />
+
+
+    <TextView
+        android:id="@+id/timeText1"
+        android:layout_width="74dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/timeButton1"
+        app:layout_constraintHorizontal_bias="0.36"
+        app:layout_constraintStart_toStartOf="@+id/timeButton1"
+        app:layout_constraintTop_toBottomOf="@+id/timeButton1" />
 
     <Button
         android:id="@+id/addTripButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/rounded_corner"
         android:text="@string/addBtnText"
-        android:layout_marginTop="90dp"
         app:layout_constraintEnd_toEndOf="@+id/timeText"
-        app:layout_constraintTop_toBottomOf="@id/timeText"
-         />
+        app:layout_constraintTop_toBottomOf="@id/timeText" />
 
     <Button
         android:id="@+id/saveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:text="@string/saveBtnText"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="120dp"
         android:background="@drawable/rounded_corner"
+        android:text="@string/saveBtnText"
+        app:layout_constraintEnd_toStartOf="@+id/addTripButton"
         app:layout_constraintStart_toEndOf="@+id/addNotesButton"
         app:layout_constraintTop_toTopOf="@+id/addTripButton" />
 

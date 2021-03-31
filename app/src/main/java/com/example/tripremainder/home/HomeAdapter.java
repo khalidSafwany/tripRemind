@@ -3,6 +3,7 @@ package com.example.tripremainder.home;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -10,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,11 +21,15 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tripremainder.AddNewTripActivity;
+import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.home.details.DetailsActivity;
+import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.notes.AddNote;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -33,6 +41,7 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<NewTrip>tripList;
     private RoomDB database;
     private Activity con;
+
 
 
     // RecyclerView recyclerView;
@@ -69,7 +78,15 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "click on item: " + tripList.get(position).getTripName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("tripname",trip.getTripName());
+                intent.putExtra("tripstart",trip.getStartPoint());
+                intent.putExtra("tripend",trip.getEndPoint());
+                intent.putExtra("tripdate",trip.getTripDate());
+                intent.putExtra("triptime",trip.getTripTime());
+                intent.putExtra("tripstate",trip.getStateType());
+                intent.putExtra("tripId",trip.getId());
+                context.startActivity(intent);
             }
         });
         holder.startBtn.setOnClickListener(v->{
@@ -78,12 +95,27 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             context.startActivity(mapIntent);
-
             NewTrip trip1 = tripList.get(position);
-            trip1.setState(1);
-            database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
-            tripList.remove(position);
-            notifyDataSetChanged();
+            String start = trip1.getStartPoint();
+            String end = trip1.getEndPoint();
+            if(trip1.getDirection().equals("Round trip")){
+                trip1.setDirection("One way");
+                trip1.setEndPoint(start);
+                trip1.setStartPoint(end);
+                database.tripDaos().updateTripEndPoint(trip1.getId() , trip1.getEndPoint());
+                database.tripDaos().updateTripStartPoint(trip1.getId() , trip1.getStartPoint());
+                database.tripDaos().updateTripDirection(trip1.getId() , trip1.getDirection());
+                database.tripDaos().updateTripBackDate(trip1.getId() , trip1.getTripBackDate());
+                database.tripDaos().updateTripBackTime(trip1.getId() , trip1.getTripBackTime());
+                notifyDataSetChanged();
+            }else{
+                trip1.setState(1);
+                trip1.setStateType("Done");
+                database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
+                database.tripDaos().updateTripStateType(trip1.getId() , trip1.getStateType());
+                tripList.remove(position);
+                notifyDataSetChanged();
+            }
 
         });
         Log.i(TAG, "onBindViewHolder:");
@@ -93,14 +125,30 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onClick(View view)  {
 
-                NewTrip trip = tripList.get(holder.getAdapterPosition());
-                database.tripDaos().delete(trip);
-                FIreBaseConnection conn = new FIreBaseConnection();
-                conn.deleteTrip(trip.getId());
-                int postion = holder.getAdapterPosition();
-                tripList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position,tripList.size());
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+                builder.setTitle("Delete Trip");
+                builder.setMessage("Are you sure to Delete Trip??");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        NewTrip trip = tripList.get(position);
+                        trip.setState(2);
+                        trip.setStateType("Cancelled");
+                        database.tripDaos().updateTripState(trip.getId() , trip.getState());
+                        database.tripDaos().updateTripStateType(trip.getId() , trip.getStateType());
+                        tripList.remove(position);
+                        notifyDataSetChanged();
+                        FIreBaseConnection conn = new FIreBaseConnection();
+                        conn.deleteTrip(trip.getId());
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position,tripList.size());
+                    }
+                });
+                builder.setNegativeButton("Cancel" , null);
+                builder.create();
+                builder.show();
+
             }
         });
 
@@ -117,20 +165,44 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.AddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NewTrip trip = tripList.get(position);
                 Intent intent = new Intent(context, AddNote.class);
+                intent.putExtra("id" , trip.getId());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 context.startActivity(intent);
             }
         });
         holder.notestrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String notes = "";
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 ViewGroup viewGroup = view.findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.notesdialog, viewGroup, false);
                 builder.setView(dialogView);
                 final Button btnClose = dialogView.findViewById(R.id.buttonClose);
-
-
+                TextView note_txt = dialogView.findViewById(R.id.note_txt);
+                TextView note_txt1 = dialogView.findViewById(R.id.note_txt1);
+                TextView note_txt2 = dialogView.findViewById(R.id.note_txt2);
+                NewTrip trip = tripList.get(position);
+                List<NoteModel> noteList = database.noteDao().getAllNotes(trip.getId());
+                System.out.println("list size = " + noteList.size());
+                int size = noteList.size();
+                if(noteList.size()>=1) {
+                    note_txt.setText(noteList.get(size - 1).getNote());
+                }else {
+                    note_txt.setText("");
+                }
+                if(noteList.size()>=2) {
+                    note_txt1.setText(noteList.get(size - 2).getNote());
+                }else {
+                    note_txt1.setText("");
+                }
+                if(noteList.size()>=3) {
+                    note_txt2.setText(noteList.get(size - 3).getNote());
+                }else {
+                    note_txt2.setText("");
+                }
                 AlertDialog alertDialog = builder.create();
                 alertDialog.setCancelable(false);
                 btnClose.setOnClickListener(new View.OnClickListener() {

@@ -26,7 +26,93 @@ public class NewTrip implements Serializable {
     @ColumnInfo
     private String tripDate;
     @ColumnInfo
+    private String tripBackTime;
+    @ColumnInfo
+    private String tripBackDate;
+    @ColumnInfo
     private int state;
+    @ColumnInfo
+    private String stateType;
+
+    public String getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(String statename) {
+        this.stateType = statename;
+    }
+
+    @ColumnInfo
+    private double startPointLong;
+    @ColumnInfo
+    private double endPointLong;
+    @ColumnInfo
+    private double startPointlat;
+    @ColumnInfo
+    private double endPointlat;
+
+    public double getStartPointLong() {
+        return startPointLong;
+    }
+
+    public void setStartPointLong(double startPointLong) {
+        this.startPointLong = startPointLong;
+    }
+
+    public double getEndPointLong() {
+        return endPointLong;
+    }
+
+    public void setEndPointLong(double endPointLong) {
+        this.endPointLong = endPointLong;
+    }
+
+    public double getStartPointlat() {
+        return startPointlat;
+    }
+
+    public void setStartPointlat(double startPointlat) {
+        this.startPointlat = startPointlat;
+    }
+
+    public double getEndPointlat() {
+        return endPointlat;
+    }
+
+    public void setEndPointlat(double endPointlat) {
+        this.endPointlat = endPointlat;
+    }
+
+    public String getTripBackTime() {
+        return tripBackTime;
+    }
+
+    public void setTripBackTime(String tripBackTime) {
+        this.tripBackTime = tripBackTime;
+    }
+
+    public String getTripBackDate() {
+        return tripBackDate;
+    }
+
+    public void setTripBackDate(String tripBackDate) {
+        this.tripBackDate = tripBackDate;
+    }
+
+    @ColumnInfo
+    private String direction;
+
+
+
+
+    public String getDirection() {
+        return direction;
+    }
+
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
     public int getState() {
         return state;
