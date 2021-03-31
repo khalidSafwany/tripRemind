@@ -50,11 +50,21 @@ public interface TripDaos {
     @Query("UPDATE newtrip set state = :state WHERE id = :id")
     void updateTripState(int id ,int state);
 
+    @Query("UPDATE newtrip set stateType = :stateType WHERE id = :id")
+    void updateTripStateType(int id ,String stateType);
+
+    @Query("select * from NewTrip where state = 0")
+    List<NewTrip> getUpcomingTrips();
     @Query("select * from NewTrip where state = 0 and email = :mail")
     List<NewTrip> getUpcomingTrips(String mail);
 
     @Query("select * from NewTrip where state != 0 and email = :mail")
     List<NewTrip> getHistoryTrips(String mail);
+    @Query("select * from NewTrip where id = :id")
+    NewTrip getTripById(int id);
+
+    @Query("select * from NewTrip where state != 0")
+    List<NewTrip> getHistoryTrips();
 
     @Query("select * from NewTrip where email = :mail ")
     List<NewTrip> getAllTripsWithMail(String mail);

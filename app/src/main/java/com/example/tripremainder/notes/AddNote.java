@@ -33,6 +33,8 @@ public class AddNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+        setTitle("Add Note");
+
         editText = findViewById(R.id.edit_text);
         btAdd = findViewById(R.id.bt_add);
         btnSave = findViewById(R.id.bt_save);

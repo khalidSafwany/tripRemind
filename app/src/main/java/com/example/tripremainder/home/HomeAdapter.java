@@ -26,6 +26,7 @@ import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.home.details.DetailsActivity;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.notes.AddNote;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,7 +79,14 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "click on item: " + tripList.get(position).getTripName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("tripname",trip.getTripName());
+                intent.putExtra("tripstart",trip.getStartPoint());
+                intent.putExtra("tripend",trip.getEndPoint());
+                intent.putExtra("tripdate",trip.getTripDate());
+                intent.putExtra("triptime",trip.getTripTime());
+                intent.putExtra("tripstate",trip.getStateType());
+                context.startActivity(intent);
             }
         });
         holder.startBtn.setOnClickListener(v->{
@@ -107,6 +115,12 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 notifyDataSetChanged();
             }
 
+            trip1.setState(1);
+            trip1.setStateType("Done");
+            database.tripDaos().updateTripState(trip1.getId() , trip1.getState());
+            database.tripDaos().updateTripStateType(trip1.getId() , trip1.getStateType());
+            tripList.remove(position);
+            notifyDataSetChanged();
 
         });
         Log.i(TAG, "onBindViewHolder:");
@@ -116,6 +130,18 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             @Override
             public void onClick(View view)  {
 
+                NewTrip trip = tripList.get(holder.getAdapterPosition());
+                //database.tripDaos().delete(trip);
+                trip.setState(2);
+                trip.setStateType("Cancelled");
+                database.tripDaos().updateTripState(trip.getId() , trip.getState());
+                database.tripDaos().updateTripStateType(trip.getId() , trip.getStateType());
+                notifyDataSetChanged();
+                FIreBaseConnection conn = new FIreBaseConnection();
+                conn.deleteTrip(trip.getId());
+                tripList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,tripList.size());
                 androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
                 builder.setTitle("Delete Trip");
                 builder.setMessage("Are you sure to Delete Trip??");
