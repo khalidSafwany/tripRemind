@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Database;
 
 import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.MpFragment;
@@ -50,7 +53,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     View headerView;
     TextView headerEmail;
     private FirebaseDatabase mFirebaseDatabase;
+
     String email;
+    ArrayList<NewTrip> syncData = new ArrayList<>();
+    ArrayList<NoteModel> syncDataNotes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,12 +133,38 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
         if(menuItem.getItemId() == R.id.sync){
             FIreBaseConnection con = new FIreBaseConnection();
+            Handler handler;
+            RoomDB databse =  RoomDB.getInstance(HomeActivity.this);
+            databse.tripDaos().deleteAll(email);
+            handler = new Handler(){
+                @Override
+                public void handleMessage(@NonNull Message msg) {
 
-            ArrayList<NewTrip> syncData  = con.getTripsFromFireBase();
-            RoomDB databse =  RoomDB.getInstance(this);
-            for(NewTrip item:syncData){
-                databse.tripDaos().insertTrip( item);
-            }
+                    ArrayList<NewTrip> finalSyncData = syncData;
+                    for(NewTrip item: finalSyncData){
+                        NewTrip tempTrip = new NewTrip();
+                        tempTrip.setTripName(item.getTripName());
+                        tempTrip.setTripDate(item.getTripDate());
+                        tempTrip.setTripBackDate(item.getTripBackDate());
+                        tempTrip.setTripTime(item.getTripBackDate());
+                        tempTrip.setTripBackTime(item.getTripBackTime());
+                        tempTrip.setEmail(item.getEmail());
+                        tempTrip.setDirection(item.getDirection());
+                        tempTrip.setEndPoint(item.getEndPoint());
+                        tempTrip.setStartPoint(item.getStartPoint());
+                        tempTrip.setEndPointlat(item.getEndPointlat());
+                        tempTrip.setEndPointLong(item.getEndPointLong());
+                        tempTrip.setStartPointlat(item.getStartPointlat());
+                        tempTrip.setState(item.getState());
+                        tempTrip.setStartPointLong(item.getStartPointLong());
+                        tempTrip.setStateType(item.getStateType());
+                        databse.tripDaos().insertTrip(tempTrip);
+                    }
+                }
+
+            };
+            syncData = con.getTripsFromFireBase(handler);
+
 
         }
 

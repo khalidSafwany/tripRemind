@@ -16,6 +16,10 @@ public interface TripDaos {
     @Insert
     long insertTrip(NewTrip trip);
 
+
+    @Query("DELETE from newtrip where email = :mail")
+    void deleteAll(String mail);
+
     @Delete
     void delete(NewTrip trip);
 

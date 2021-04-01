@@ -1,11 +1,14 @@
 package com.example.tripremainder.home;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
 import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
 import com.example.tripremainder.AddNewTripActivity;
+import com.example.tripremainder.Connectivity.Connectivity;
 import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
@@ -32,11 +37,17 @@ import com.example.tripremainder.SimpleService;
 import com.example.tripremainder.home.details.DetailsActivity;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.notes.AddNote;
+import com.example.tripremainder.notification.DialogCast;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -49,6 +60,7 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<NewTrip>tripList;
     private RoomDB database;
     private Activity con;
+    String timeTonotify;
 
 
 
@@ -120,7 +132,11 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 database.tripDaos().updateTripDirection(trip1.getId() , trip1.getDirection());
                 database.tripDaos().updateTripBackDate(trip1.getId() , trip1.getTripBackDate());
                 database.tripDaos().updateTripBackTime(trip1.getId() , trip1.getTripBackTime());
+
                 notifyDataSetChanged();
+                timeTonotify = trip1.getTripBackTime();
+                setAlarm(trip1.getTripName(), trip1.getTripBackDate(), start, (int) trip1.getId(), false);
+
             }else{
                 trip1.setState(1);
                 trip1.setStateType("Done");
@@ -132,6 +148,17 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 tripList.remove(position);
                 notifyDataSetChanged();
             }
+            try {
+                HomeFragment.isSyncNeeded = !Connectivity.checkConnection();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(!HomeFragment.isSyncNeeded) {
+                NewTrip tempTrip = database.tripDaos().getTripById((trip1.getId()));
+                FIreBaseConnection connection = new FIreBaseConnection();
+                connection = new FIreBaseConnection();
+                connection.updateTrip(tempTrip);
+            }
 
         });
         Log.i(TAG, "onBindViewHolder:");
@@ -140,7 +167,8 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.deleteTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)  {
-
+                FIreBaseConnection connection;
+                connection = new FIreBaseConnection();
                 androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
                 builder.setTitle("Delete Trip");
                 builder.setMessage("Are you sure to Delete Trip??");
@@ -155,12 +183,23 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
                         database.tripDaos().updateTripStateType(trip.getId() , trip.getStateType());
                         tripList.remove(position);
                         notifyDataSetChanged();
-                        FIreBaseConnection conn = new FIreBaseConnection();
-                        conn.deleteTrip(trip.getId());
+                        try {
+                            HomeFragment.isSyncNeeded = !Connectivity.checkConnection();
+                        } catch (IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if(!HomeFragment.isSyncNeeded) {
+                            NewTrip tempTrip = database.tripDaos().getTripById((trip.getId()));
+                            connection.updateTrip(tempTrip);
+                        }
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position,tripList.size());
+
+
                     }
                 });
+
+
                 builder.setNegativeButton("Cancel" , null);
                 builder.create();
                 builder.show();
@@ -263,6 +302,29 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             e.printStackTrace();
         }
         context.startService(new Intent(context, SimpleService.class));
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void setAlarm(String tripName, String date, String endLocation,int tripId, boolean isRound) {
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context.getApplicationContext(), DialogCast.class);
+        intent.putExtra("event", tripName);
+        intent.putExtra("end", endLocation);
+        intent.putExtra("id", tripId);
+        intent.putExtra("isRound", false);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        String dateandtime = date + " " + timeTonotify;
+
+        DateFormat formatter = new SimpleDateFormat("d-M-yyyy hh:mm");
+        try {
+            Date date1 = formatter.parse(dateandtime);
+            am.setExact(AlarmManager.RTC_WAKEUP, date1.getTime(), pendingIntent);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 }

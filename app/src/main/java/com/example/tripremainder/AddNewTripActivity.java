@@ -107,6 +107,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     private HomeAdapter adapter;
     public static final int Notification_id = 1;
     String timeTonotify;
+    String timeToNotifyRound;
 
     // The Entry point of the database
     private FirebaseDatabase mFirebaseDatabase;
@@ -258,15 +259,21 @@ public class AddNewTripActivity extends AppCompatActivity{
             database.tripDaos().updateTripStartPoint(tripToBeUpdated.getId() , tripToBeUpdated.getStartPoint());
             database.tripDaos().updateTripEndPoint(tripToBeUpdated.getId() , tripToBeUpdated.getEndPoint());
             database.tripDaos().updateTripDate(tripToBeUpdated.getId() , tripToBeUpdated.getTripDate());
-            setAlarm(tripToBeUpdated.getTripName(), tripToBeUpdated.getTripDate(), tripToBeUpdated.getEndPoint(), tripToBeUpdated.getId());
+            boolean isRound = false;
+            if(tripToBeUpdated.getTripBackDate()!=null) {
+                isRound = true;
+            }
+            setAlarm(tripToBeUpdated.getTripName(), tripToBeUpdated.getTripDate(), tripToBeUpdated.getEndPoint(), tripToBeUpdated.getId(), isRound);
 
             try {
-               isSyncNeeded = Connectivity.checkConnection();
+               isSyncNeeded = !Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
             if(!isSyncNeeded) {
-                connection.updateTrip(tripToBeUpdated);
+                NewTrip tempTrip = database.tripDaos().getTripById((tripToBeUpdated.getId()));
+                connection = new FIreBaseConnection();
+                connection.updateTrip(tempTrip);
             }
             Intent returnIntent = new Intent();
             returnIntent.putExtra(isSyncNeededString,isSyncNeeded);
@@ -343,18 +350,7 @@ public class AddNewTripActivity extends AppCompatActivity{
 
         if(validate()){
               Toast.makeText(AddNewTripActivity.this," Input Validated",Toast.LENGTH_SHORT).show();
-//            tempNewTrip = new NewTrip();
-//            tempNewTrip.setTripName(tripNameEditText.getText().toString());
-//            tempNewTrip.setStartPoint(startLocationEditText.getText().toString());
-//            tempNewTrip.setEndPoint(endLocationEditText.getText().toString());
-//            tempNewTrip.setTripDate(dateText.getText().toString());
-//            tempNewTrip.setTripTime(timeText.getText().toString());
-            // tempNewTrip.setNotes(notes);
 
-            //
-            //connection.deleteTrip();
-            //connection.updateTrip(tempHomeList,"first");
-            //tempNewTrip = new NewTrip();
             try {
                 isSyncNeeded = !Connectivity.checkConnection();
             } catch (IOException | InterruptedException e) {
@@ -379,11 +375,17 @@ public class AddNewTripActivity extends AppCompatActivity{
 
             long id = database.tripDaos().insertTrip(tempNewTrip);
             tempNewTrip.setId((int)id);
-            setAlarm(tempNewTrip.getTripName(), tempNewTrip.getTripDate(), tempNewTrip.getEndPoint(), (int) id);
+            boolean isRound = false;
+            if(tempNewTrip.getTripBackDate()!=null) {
+                   isRound = true;
+
+            }
+            setAlarm(tempNewTrip.getTripName(), tempNewTrip.getTripDate(), tempNewTrip.getEndPoint(), (int) id, isRound);
 
             if(!isSyncNeeded) {
+                NewTrip tempTrip = database.tripDaos().getTripById((int)id);
                 connection = new FIreBaseConnection();
-                connection.addNewTrip(tempNewTrip);
+                connection.addNewTrip(tempTrip);
             }
          //   connection.addNewTrip(tempNewTrip);
             Intent returnIntent = new Intent();
@@ -474,8 +476,8 @@ public class AddNewTripActivity extends AppCompatActivity{
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                timeTonotify = i + ":" + i1;
-                timeText1.setText(timeTonotify);
+                timeToNotifyRound = i + ":" + i1;
+                timeText1.setText(timeToNotifyRound);
 
             }
         }, hour, minute, false);
@@ -549,14 +551,14 @@ public class AddNewTripActivity extends AppCompatActivity{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void setAlarm(String tripName, String date, String endLocation,int tripId) {
+    public void setAlarm(String tripName, String date, String endLocation,int tripId, boolean isRound) {
 
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getApplicationContext(), DialogCast.class);
-
         intent.putExtra("event", tripName);
         intent.putExtra("end", endLocation);
         intent.putExtra("id",tripId);
+        intent.putExtra("isRound", false);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
         String dateandtime = date + " " + timeTonotify;
 
@@ -568,6 +570,23 @@ public class AddNewTripActivity extends AppCompatActivity{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+//        if(isRound){
+//            AlarmManager am2 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            Intent intent2 = new Intent(getApplicationContext(), DialogCast.class);
+//            intent2.putExtra("event", tripName);
+//            intent2.putExtra("end", endLocation);
+//            intent2.putExtra("id",tripId);
+//            intent2.putExtra("isRound", true);
+//            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getApplicationContext(), 0, intent2, PendingIntent.FLAG_ONE_SHOT);
+//            String dateandtime2 = date + " " + timeToNotifyRound;
+//            try {
+//                Date date2 = formatter.parse(dateandtime2);
+//                am2.setExact(AlarmManager.RTC_WAKEUP, date2.getTime(), pendingIntent2);
+//
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
 
