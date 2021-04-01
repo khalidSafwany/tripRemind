@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">tripRemainder</string>
+    <string name="app_name">Trip Remainder</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="UpComingTrip">UpComingTrip</string>

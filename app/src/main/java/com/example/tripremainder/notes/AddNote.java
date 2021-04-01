@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,13 +33,16 @@ public class AddNote extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     NoteAdapter adapter;
     RoomDB database;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-        setTitle("Add Note");
-
+       // setTitle("Add Note");
+        toolbarTop = findViewById(R.id.toolbar);
+        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+        mTitle.setText("Add Note");
         editText = findViewById(R.id.edit_text);
         btAdd = findViewById(R.id.bt_add);
         btnSave = findViewById(R.id.bt_save);

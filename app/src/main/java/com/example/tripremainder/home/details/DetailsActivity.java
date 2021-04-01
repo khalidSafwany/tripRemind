@@ -41,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        setTitle("Trip Details");
+        //setTitle("Trip Details");
          toolbarTop = findViewById(R.id.toolbar);
          mTitle = toolbarTop.findViewById(R.id.toolbar_title);
          mTitle.setText("Trip Details");

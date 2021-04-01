@@ -18,14 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TripRemainder">
         <activity android:name=".home.details.DetailsActivity"
-            android:theme="@style/AppTheme.Splash"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
             ></activity>
         <activity
             android:name=".home.HomeActivity"
             android:theme="@style/AppTheme.Splash"></activity>
         <activity
             android:name=".auth.Sign_inActivity"
-            android:label="@string/title_activity_sign_in"></activity>
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+           ></activity>
         <activity android:name=".SplashScreen"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
@@ -34,11 +35,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddNewTripActivity" />
+        <activity
+            android:name=".AddNewTripActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+
+        </activity>
+
         <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".auth.Sign_upActivity"
-            android:label="@string/title_activity_sign_up"></activity>
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+
+            ></activity>
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
@@ -64,21 +72,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <activity android:theme="@style/Theme.Transparent"
-            android:name=".notification.CancelNotification"
-            android:excludeFromRecents="true"
-            android:taskAffinity="">
 
-        </activity>
-        <activity android:theme="@style/Theme.Transparent"
-            android:name=".notification.StartMap" />
 
-        <activity android:name=".notes.AddNote">
+
+
+        <activity android:name=".notes.AddNote"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
         </activity>
 
         <service android:name=".SimpleService" />
         <activity android:name=".HiActivty" android:theme="@style/Theme.AppCompat.Dialog"></activity>
-        <activity android:name=".notes.AddNote"></activity>
+
         <receiver
             android:name=".notification.DialogCast"
             android:enabled="true">

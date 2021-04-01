@@ -2,6 +2,7 @@ package com.example.tripremainder.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,13 +32,16 @@ public class Sign_upActivity extends AppCompatActivity {
     private static final String TAG = "";
     private ProgressBar progressBar;
     private Button signupbtn;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
+        toolbarTop = findViewById(R.id.toolbar);
+        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+        mTitle.setText("Register");
 
         TextView btnSignUp = (TextView) findViewById(R.id.login_page);
 

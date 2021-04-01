@@ -3,6 +3,7 @@ package com.example.tripremainder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
 import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
@@ -85,7 +86,8 @@ public class AddNewTripActivity extends AppCompatActivity{
     Button saveTripBtn;
     NewTrip tempNewTrip;
     NewTrip tripToBeUpdated;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
 
     private static String isSyncNeededString = "sync";
     private static boolean isSyncNeeded = false;
@@ -120,10 +122,12 @@ public class AddNewTripActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_trip);
-        setTitle("New Trip");
+        //setTitle("New Trip");
         notes = new ArrayList<>();
         setView();
-
+        toolbarTop = findViewById(R.id.toolbar);
+        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+        mTitle.setText("New Trip");
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
 
