@@ -38,8 +38,6 @@ public class Sign_inActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
-    Toolbar toolbarTop ;
-    TextView mTitle ;
     SignInButton button;
     private final static int RC_SIGN_IN = 123;
     GoogleSignInClient mGoogleSignInClient;
@@ -58,9 +56,7 @@ public class Sign_inActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-        toolbarTop = findViewById(R.id.toolbar);
-        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
-        mTitle.setText("Login");
+
         mAuth = FirebaseAuth.getInstance();
 
         //check the current user

@@ -41,7 +41,7 @@ public class AlarmBrodcast extends BroadcastReceiver {
         //Notification Builder
 
 
-        mBuilder.setSmallIcon(R.drawable.ic_baseline_calendar_today_24);
+        mBuilder.setSmallIcon(R.drawable.earthsmall);
         mBuilder.setAutoCancel(true);
         mBuilder.setOngoing(true);
         mBuilder.setPriority(Notification.PRIORITY_HIGH);

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeConstraint"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/home_CV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="8dp"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog">
+
+            <TextView
+                android:id="@+id/trip_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="56dp"
+                android:text="@string/TripTime"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/delete_trip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/deletebin"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/trip_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="76dp"
+                android:text="@string/TripDate"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/trip_time"
+                app:layout_constraintTop_toBottomOf="@+id/trip_time" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#5C605C"
+                app:layout_constraintBottom_toTopOf="@id/view11"
+                app:layout_constraintStart_toStartOf="@id/view11"
+                app:layout_constraintTop_toBottomOf="@id/view12"
+                app:layout_constraintTop_toTopOf="@id/start_point"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/trip_name"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="260dp"
+                android:text="@string/TripName"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/start_point"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/StartPoint"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+
+                app:layout_constraintStart_toStartOf="@+id/trip_name"
+                app:layout_constraintTop_toBottomOf="@+id/trip_name" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/Status"
+                android:textColor="@color/purple_700"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/trip_name"
+                app:layout_constraintTop_toBottomOf="@+id/end_point" />
+
+            <TextView
+                android:id="@+id/end_point"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+
+                android:text="@string/EndPoint"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/start_point"
+                app:layout_constraintTop_toBottomOf="@+id/start_point" />
+
+            <View
+                android:id="@+id/view11"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/shapehome"
+                app:layout_constraintBottom_toBottomOf="@+id/end_point"
+                app:layout_constraintEnd_toStartOf="@+id/end_point"
+                app:layout_constraintTop_toTopOf="@+id/end_point"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#FFF53B"
+                app:layout_constraintStart_toStartOf="@+id/view11"
+                app:layout_constraintTop_toTopOf="@id/start_point" />
+
+            <Button
+                android:id="@+id/viewNote_btn"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="43dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_corner"
+                android:text="@string/ViewNotes"
+                android:textColor="@color/purple_700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/status"
+                app:layout_constraintTop_toBottomOf="@+id/end_point" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
