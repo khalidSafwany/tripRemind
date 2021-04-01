@@ -157,18 +157,20 @@
         android:background="@color/gray"
         app:layout_constraintTop_toBottomOf="@id/date_img"
         tools:layout_editor_absoluteX="16dp" />
+
     <TextView
         android:id="@+id/Note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
         android:text="@string/Notes"
         android:textColor="@color/purple_700"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/state"
+        app:layout_constraintVertical_bias="0.547" />
 
     <TextView
         android:id="@+id/state"
@@ -186,7 +188,9 @@
         android:id="@+id/recyclerView"
         android:layout_width="250dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/Note"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"

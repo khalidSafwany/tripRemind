@@ -286,7 +286,7 @@ public class AddNewTripActivity extends AppCompatActivity{
     private  void setUpdateView(){
         addTripBtn.setVisibility(View.INVISIBLE);
         addTripBtn.setEnabled(false);
-        tripNameEditText.setText("iioiiiiiiii");
+        tripNameEditText.setText(tripToBeUpdated.getTripName());
         startLocationEditText.setText(tripToBeUpdated.getStartPoint());
         endLocationEditText.setText(tripToBeUpdated.getEndPoint());
         timeText.setText(tripToBeUpdated.getTripTime());
@@ -468,7 +468,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 timeTonotify = i + ":" + i1;
-                timeText.setText(timeTonotify);
+                timeText1.setText(timeTonotify);
 
             }
         }, hour, minute, false);
@@ -505,7 +505,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                dateText.setText(day + "-" + (month + 1) + "-" + year);
+                dateText1.setText(day + "-" + (month + 1) + "-" + year);
             }
         }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
