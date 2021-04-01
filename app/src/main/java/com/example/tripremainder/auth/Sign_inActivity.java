@@ -2,6 +2,7 @@ package com.example.tripremainder.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,7 +38,6 @@ public class Sign_inActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
-
     SignInButton button;
     private final static int RC_SIGN_IN = 123;
     GoogleSignInClient mGoogleSignInClient;

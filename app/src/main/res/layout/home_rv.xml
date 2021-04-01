@@ -8,6 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/home_CV"
+        android:background="@drawable/custom_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,6 +21,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:background="@drawable/dialog"
             android:layout_height="wrap_content">
 
             <TextView
@@ -37,35 +39,35 @@
 
             <ImageView
                 android:id="@+id/edit_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="end"
                 android:layout_margin="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_edit"
+                app:srcCompat="@drawable/edit"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/delete_trip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="end"
                 android:layout_margin="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_img"
-                app:srcCompat="@drawable/ic_delete"
+                app:srcCompat="@drawable/deletebin"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/notes_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="end"
                 android:layout_margin="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/delete_trip"
-                app:srcCompat="@drawable/ic_article"
+                app:srcCompat="@drawable/notes"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
@@ -81,36 +83,71 @@
 
             <TextView
                 android:id="@+id/trip_name"
-                android:layout_width="wrap_content"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="2dp"
                 android:text="@string/TripName"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/trip_time"
+                app:layout_constraintEnd_toStartOf="@+id/edit_img"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <View
+                android:id="@+id/view11"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/shapehome"
+                app:layout_constraintBottom_toBottomOf="@+id/end_point"
+                app:layout_constraintEnd_toStartOf="@+id/end_point"
+                app:layout_constraintTop_toTopOf="@+id/end_point"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#FFF53B"
+                app:layout_constraintStart_toStartOf="@+id/view11"
+                app:layout_constraintTop_toTopOf="@id/start_point" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#5C605C"
+                app:layout_constraintBottom_toTopOf="@id/view11"
+                app:layout_constraintStart_toStartOf="@id/view11"
+                app:layout_constraintTop_toBottomOf="@id/view12"
+                app:layout_constraintTop_toTopOf="@id/start_point"
+                app:layout_constraintVertical_bias="1.0" />
             <TextView
                 android:id="@+id/start_point"
-                android:layout_width="wrap_content"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="5dp"
                 android:text="@string/StartPoint"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/trip_name"
+                app:layout_constraintEnd_toStartOf="@+id/delete_trip"
+                app:layout_constraintStart_toEndOf="@+id/view12"
                 app:layout_constraintTop_toBottomOf="@+id/trip_name" />
 
             <TextView
                 android:id="@+id/end_point"
-                android:layout_width="wrap_content"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="5dp"
                 android:text="@string/EndPoint"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/start_point"
+                app:layout_constraintEnd_toStartOf="@+id/notes_img"
                 app:layout_constraintTop_toBottomOf="@+id/start_point" />
 
             <Button
@@ -119,8 +156,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_corner"
                 android:text="@string/AddNote"
+                android:textColor="@color/purple_700"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/start_btn"
                 app:layout_constraintHorizontal_bias="0.974"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +173,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"
                 android:layout_marginRight="48dp"
+                android:background="@drawable/rounded_corner"
+                android:textColor="@color/purple_700"
                 android:text="@string/Start"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/addnote_btn" />
         </androidx.constraintlayout.widget.ConstraintLayout>

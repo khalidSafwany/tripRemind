@@ -90,7 +90,7 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
         builder.setTitle(str);
         builder.setMessage(triploc);
         // add the buttons
-        builder.setIcon(R.drawable.ic_baseline_calendar_today_24);
+        builder.setIcon(R.drawable.earthsmall);
         builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

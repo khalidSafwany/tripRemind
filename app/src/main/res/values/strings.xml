@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">tripRemainder</string>
+    <string name="app_name">Trip Remainder</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="UpComingTrip">UpComingTrip</string>
@@ -34,10 +34,12 @@
     <string name="password">password</string>
     <string name="email">E_Mail</string>
     <string name="login">login</string>
-    <string name="create_a_new_account">create_a_new_account</string>
+    <string name="create_a_new_account">create a new account</string>
     <string name="image">image</string>
     <string name="failed">Faild</string>
     <string name="title_activity_sign_in">sign_in_Activity</string>
+    <string name="register">Register</string>
+
     <string name="tripNameLabelText">Trip Name</string>
     <string name="StartPlaceText">Start Location</string>
     <string name="EndLocationText">End Location</string>

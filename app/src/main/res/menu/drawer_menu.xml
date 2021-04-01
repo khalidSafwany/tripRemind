@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/General">
+    <item android:title="@string/General"
+        >
         <menu>
             <item
                 android:id="@+id/home"
@@ -13,7 +14,7 @@
                 android:title="@string/History" />
             <item
                 android:id="@+id/map"
-                android:icon="@drawable/ic_map"
+                android:icon="@drawable/maap"
                 android:title="@string/Map" />
         </menu>
     </item>

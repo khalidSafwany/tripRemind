@@ -3,6 +3,7 @@ package com.example.tripremainder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bubbles.src.main.java.com.siddharthks.bubbles.DataClass;
 import com.bubbles.src.main.java.com.siddharthks.bubbles.FloatingBubblePermissions;
@@ -22,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.text.InputType;
 import android.util.Log;
@@ -35,6 +37,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -75,9 +78,9 @@ public class AddNewTripActivity extends AppCompatActivity{
     static EditText tripNameEditText;
     EditText startLocationEditText;
     EditText endLocationEditText;
-    ImageButton calenderButton;
-    ImageButton timeButton;
-    ImageButton addNoteBtn;
+    ImageView calenderButton;
+    ImageView timeButton;
+    ImageView addNoteBtn;
     TextView dateText;
     TextView timeText;
     Spinner tripTypeSpinner;
@@ -85,7 +88,8 @@ public class AddNewTripActivity extends AppCompatActivity{
     Button saveTripBtn;
     NewTrip tempNewTrip;
     NewTrip tripToBeUpdated;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
 
     private static String isSyncNeededString = "sync";
     private static boolean isSyncNeeded = false;
@@ -97,8 +101,8 @@ public class AddNewTripActivity extends AppCompatActivity{
     FIreBaseConnection connection;
 
 
-    ImageButton calenderButton1;
-    ImageButton timeButton1;
+    ImageView calenderButton1;
+    ImageView timeButton1;
     TextView dateText1;
     TextView timeText1;
 
@@ -121,10 +125,12 @@ public class AddNewTripActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_trip);
-        setTitle("New Trip");
+        //setTitle("New Trip");
         notes = new ArrayList<>();
         setView();
-
+        toolbarTop = findViewById(R.id.toolbar);
+        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+        mTitle.setText("New Trip");
         Places.initialize(AddNewTripActivity.this,"AIzaSyDNuanqZTnydcYiOF0PjV1MR_f8t_vGv1Q");
         placesClient = Places.createClient(this);
 
@@ -456,7 +462,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,R.style.MyDialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 timeTonotify = i + ":" + i1;
@@ -465,6 +471,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             }
         }, hour, minute, false);
         timePickerDialog.setTitle("Set your trip start time");
+        timePickerDialog.setCancelable(false);
         timePickerDialog.show();
 
     }
@@ -473,7 +480,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.MyDialogTheme,new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 timeToNotifyRound = i + ":" + i1;
@@ -482,6 +489,7 @@ public class AddNewTripActivity extends AppCompatActivity{
             }
         }, hour, minute, false);
         timePickerDialog.setTitle("Set your trip start time");
+        timePickerDialog.setCancelable(false);
         timePickerDialog.show();
 
     }
@@ -492,7 +500,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,R.style.MyDialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 dateText.setText(day + "-" + (month + 1) + "-" + year);
@@ -500,6 +508,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.setTitle("Set your trip date");
+        datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
 
@@ -511,7 +520,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,R.style.MyDialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 dateText1.setText(day + "-" + (month + 1) + "-" + year);
@@ -519,6 +528,7 @@ public class AddNewTripActivity extends AppCompatActivity{
         }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.setTitle("Set your trip date");
+        datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
 
@@ -561,7 +571,6 @@ public class AddNewTripActivity extends AppCompatActivity{
         intent.putExtra("isRound", false);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
         String dateandtime = date + " " + timeTonotify;
-
         DateFormat formatter = new SimpleDateFormat("d-M-yyyy hh:mm");
         try {
             Date date1 = formatter.parse(dateandtime);

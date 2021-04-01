@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 public class AddNote extends AppCompatActivity {
 
     EditText editText;
@@ -36,13 +41,16 @@ public class AddNote extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     NoteAdapter adapter;
     RoomDB database;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-        setTitle("Add Note");
-
+       // setTitle("Add Note");
+        toolbarTop = findViewById(R.id.toolbar);
+        mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+        mTitle.setText("Notes");
         editText = findViewById(R.id.edit_text);
         btAdd = findViewById(R.id.bt_add);
         btnSave = findViewById(R.id.bt_save);
@@ -116,7 +124,7 @@ public class AddNote extends AppCompatActivity {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder((viewHolder.itemView.getContext()));
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder((viewHolder.itemView.getContext()),R.style.MyDialogTheme);
                     builder.setTitle("Delete Note");
                     builder.setMessage("Are you sure You Want to Delete Note??");
                     builder.setCancelable(false);

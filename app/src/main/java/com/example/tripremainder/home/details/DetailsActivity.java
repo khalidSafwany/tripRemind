@@ -1,6 +1,7 @@
 package com.example.tripremainder.home.details;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView time;
     TextView state;
     RecyclerView recyclerView;
-
+    Toolbar toolbarTop ;
+    TextView mTitle ;
 
     List<NoteModel> dataList = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
@@ -39,7 +41,10 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        setTitle("Trip Details");
+        //setTitle("Trip Details");
+         toolbarTop = findViewById(R.id.toolbar);
+         mTitle = toolbarTop.findViewById(R.id.toolbar_title);
+         mTitle.setText("Trip Details");
         Intent intent = getIntent();
         tripname=findViewById(R.id.nameOfTrip);
         startpoint=findViewById(R.id.startpoint);
