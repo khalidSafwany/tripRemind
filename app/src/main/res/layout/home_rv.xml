@@ -24,12 +24,47 @@
             android:background="@drawable/dialog"
             android:layout_height="wrap_content">
 
+
+            <View
+                android:id="@+id/view11"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/shapehome"
+                app:layout_constraintBottom_toBottomOf="@+id/end_point"
+                app:layout_constraintEnd_toStartOf="@+id/end_point"
+                app:layout_constraintTop_toTopOf="@+id/end_point"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#FFF53B"
+                app:layout_constraintStart_toStartOf="@+id/view11"
+                app:layout_constraintTop_toTopOf="@id/start_point" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/shapehome"
+                android:backgroundTint="#5C605C"
+                app:layout_constraintBottom_toTopOf="@id/view11"
+                app:layout_constraintStart_toStartOf="@id/view11"
+                app:layout_constraintTop_toBottomOf="@id/view12"
+                app:layout_constraintTop_toTopOf="@id/start_point"
+                app:layout_constraintVertical_bias="1.0" />
+
+
             <TextView
                 android:id="@+id/trip_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="36dp"
                 android:text="@string/TripTime"
                 android:textColor="@color/black"
@@ -74,7 +109,7 @@
                 android:id="@+id/trip_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="76dp"
+                android:layout_marginTop="80dp"
                 android:text="@string/TripDate"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -93,39 +128,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/edit_img"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/view11"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/shapehome"
-                app:layout_constraintBottom_toBottomOf="@+id/end_point"
-                app:layout_constraintEnd_toStartOf="@+id/end_point"
-                app:layout_constraintTop_toTopOf="@+id/end_point"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <View
-                android:id="@+id/view12"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/shapehome"
-                android:backgroundTint="#FFF53B"
-                app:layout_constraintStart_toStartOf="@+id/view11"
-                app:layout_constraintTop_toTopOf="@id/start_point"
-             />
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="1dp"
-                android:layout_height="0dp"
-                android:background="@drawable/shapehome"
-                android:backgroundTint="#5C605C"
-                app:layout_constraintStart_toStartOf="@id/view11"
-                app:layout_constraintBottom_toTopOf="@id/view11"
-                app:layout_constraintTop_toBottomOf="@id/view12"
-                app:layout_constraintTop_toTopOf="@id/start_point"
-                app:layout_constraintVertical_bias="1.0"
-                android:layout_marginStart="10dp" />
 
             <TextView
                 android:id="@+id/start_point"
@@ -133,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginLeft="10dp"
                 android:text="@string/StartPoint"
                 android:textColor="@color/black"
                 android:textSize="16sp"
