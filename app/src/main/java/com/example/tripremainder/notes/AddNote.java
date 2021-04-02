@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,6 +23,8 @@ import com.example.tripremainder.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 public class AddNote extends AppCompatActivity {
 
@@ -42,7 +45,7 @@ public class AddNote extends AppCompatActivity {
        // setTitle("Add Note");
         toolbarTop = findViewById(R.id.toolbar);
         mTitle = toolbarTop.findViewById(R.id.toolbar_title);
-        mTitle.setText("Add Note");
+        mTitle.setText("Notes");
         editText = findViewById(R.id.edit_text);
         btAdd = findViewById(R.id.bt_add);
         btnSave = findViewById(R.id.bt_save);
@@ -106,7 +109,7 @@ public class AddNote extends AppCompatActivity {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder((viewHolder.itemView.getContext()));
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder((viewHolder.itemView.getContext()),R.style.MyDialogTheme);
                     builder.setTitle("Delete Note");
                     builder.setMessage("Are you sure You Want to Delete Note??");
                     builder.setCancelable(false);
