@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 
 void SyncData(){
     // implement  with getting data from database then to firebase
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() , R.style.MyDialogTheme);
     builder.setView(R.layout.progress_bar_layout);
     Dialog dialog = builder.create();
     dialog.show();

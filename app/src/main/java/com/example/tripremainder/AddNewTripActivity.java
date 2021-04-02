@@ -454,14 +454,17 @@ public class AddNewTripActivity extends AppCompatActivity{
                         }
 
                     } else {
+                    tripNameEditText.setError("Enter End Location");
                         Toast.makeText(AddNewTripActivity.this, "Missing Trip End Location", Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
+                startLocationEditText.setError("Enter Start Location");
                     Toast.makeText(AddNewTripActivity.this, "Missing Trip Start Location", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             } else {
+            tripNameEditText.setError("Enter Trip Name");
                 Toast.makeText(AddNewTripActivity.this, "Missing Trip Name", Toast.LENGTH_SHORT).show();
                 return false;
             }

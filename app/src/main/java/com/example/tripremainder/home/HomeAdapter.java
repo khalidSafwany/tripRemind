@@ -169,9 +169,10 @@ public class HomeAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onClick(View view)  {
                 FIreBaseConnection connection;
                 connection = new FIreBaseConnection();
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
-                builder.setTitle("Delete Trip");
-                builder.setMessage("Are you sure to Delete Trip??");
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context ,R.style.MyDialogTheme);
+                builder.setIcon(R.drawable.warning);
+                builder.setTitle("Warning !!");
+                builder.setMessage("Are you sure to Delete Trip ?");
                 builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

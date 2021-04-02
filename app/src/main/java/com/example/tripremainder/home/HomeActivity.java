@@ -173,8 +173,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
 
         if (menuItem.getItemId() == R.id.logout) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-            builder.setTitle("LogOut Alert");
+            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this ,R.style.MyDialogTheme);
+            builder.setTitle("LogOut");
             builder.setMessage("Are you sure to log out ??");
             builder.setCancelable(false);
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

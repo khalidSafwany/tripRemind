@@ -85,7 +85,7 @@ public class AlertCustomDialog extends AppCompatDialogFragment {
 
         database = RoomDB.getInstance(getContext());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext() ,R.style.MyDialogTheme);
         builder.setCancelable(false);
         builder.setTitle(str);
         builder.setMessage(triploc);

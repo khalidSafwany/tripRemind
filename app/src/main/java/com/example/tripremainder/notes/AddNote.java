@@ -125,8 +125,9 @@ public class AddNote extends AppCompatActivity {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder((viewHolder.itemView.getContext()),R.style.MyDialogTheme);
-                    builder.setTitle("Delete Note");
-                    builder.setMessage("Are you sure You Want to Delete Note??");
+                    builder.setIcon(R.drawable.warning);
+                    builder.setTitle("Warning !!");
+                    builder.setMessage("Are you sure You Want to Delete Note ?");
                     builder.setCancelable(false);
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override

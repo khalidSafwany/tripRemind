@@ -87,9 +87,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Delete Trip");
-                builder.setMessage("Are you sure to Delete Trip ??");
+                AlertDialog.Builder builder = new AlertDialog.Builder(context ,R.style.MyDialogTheme);
+                builder.setIcon(R.drawable.warning);
+                builder.setTitle("Warning !!");
+                builder.setMessage("Are you sure to Delete Trip ?");
                 builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
