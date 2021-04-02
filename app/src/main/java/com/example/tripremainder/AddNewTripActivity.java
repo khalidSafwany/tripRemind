@@ -425,36 +425,47 @@ public class AddNewTripActivity extends AppCompatActivity{
 //
 //    }
 
-    private boolean validate(){
-        if(!tripNameEditText.getText().toString().matches("")){
-            if(!startLocationEditText.getText().toString().matches("")){
-                if(!endLocationEditText.getText().toString().matches("")){
-                    if(!timeText.getText().toString().matches("")){
-                        if(dateText.getText().toString().matches(""))
-                        {
-                            Toast.makeText(AddNewTripActivity.this,"Missing Trip Date",Toast.LENGTH_SHORT).show();
+    private boolean validate() {
+        if (!tripNameEditText.getText().toString().matches("")) {
+            if (!startLocationEditText.getText().toString().matches("")) {
+                if (!endLocationEditText.getText().toString().matches("")) {
+                    if (!timeText.getText().toString().matches("")) {
+                        if (!dateText.getText().toString().matches("")) {
+                            System.out.println(tripTypeSpinner.getSelectedItem().toString());
+                            if (tripTypeSpinner.getSelectedItem().toString().matches("Round trip")) {
+                                if (!timeText1.getText().toString().matches("")) {
+                                    if (dateText1.getText().toString().matches("")) {
+
+                                        Toast.makeText(AddNewTripActivity.this, "Missing Return Trip Date", Toast.LENGTH_SHORT).show();
+                                        return false;
+                                    }
+                                } else {
+                                    Toast.makeText(AddNewTripActivity.this, "Missing Return Trip TIME", Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+                            }
+                            } else {
+                                Toast.makeText(AddNewTripActivity.this, "Missing Trip Date", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        } else {
+                            Toast.makeText(AddNewTripActivity.this, "Missing Trip Time", Toast.LENGTH_SHORT).show();
                             return false;
                         }
 
-                    }else{
-                        Toast.makeText(AddNewTripActivity.this,"Missing Trip Time",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddNewTripActivity.this, "Missing Trip End Location", Toast.LENGTH_SHORT).show();
                         return false;
                     }
-
-                }else{
-                    Toast.makeText(AddNewTripActivity.this,"Missing Trip End Location",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddNewTripActivity.this, "Missing Trip Start Location", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-            }
-            else{
-                Toast.makeText(AddNewTripActivity.this,"Missing Trip Start Location",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(AddNewTripActivity.this, "Missing Trip Name", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }
-        else{
-            Toast.makeText(AddNewTripActivity.this,"Missing Trip Name",Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
         return true;
     }
 

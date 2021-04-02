@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
     RoomDB database;
     private List<NewTrip> tripList;
 
+
     // The Entry point of the database
     private FirebaseDatabase mFirebaseDatabase;
 
@@ -216,5 +217,9 @@ void SyncData(){
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+    }
 }

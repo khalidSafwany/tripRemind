@@ -49,14 +49,15 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
-    boolean isSecondryFragmentsActive;
+    static boolean isSecondryFragmentsActive = false;
     View headerView;
     TextView headerEmail;
     private FirebaseDatabase mFirebaseDatabase;
+    static String titleName = "Home";
 
     String email;
     ArrayList<NewTrip> syncData = new ArrayList<>();
-    ArrayList<NoteModel> syncDataNotes = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,13 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setContentView(R.layout.activity_home);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle(titleName);
         navigationView = findViewById(R.id.nested);
         headerView = navigationView.getHeaderView(0);
         headerEmail = headerView.findViewById(R.id.UserEmail);
         navigationView.setNavigationItemSelectedListener(this);
 
-        isSecondryFragmentsActive = false;
+
 
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
@@ -116,18 +117,21 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             loadFragment(new HomeFragment());
 
             getSupportActionBar().setTitle("UpComingTrips");
+            titleName = "UpComingTrips";
             isSecondryFragmentsActive = false;
 
         }
         if (menuItem.getItemId() == R.id.history) {
            loadFragment(new HistoryFragment());
             getSupportActionBar().setTitle("Trips History");
+            titleName = "Trips History";
             isSecondryFragmentsActive = true;
 
         }
         if (menuItem.getItemId() == R.id.map) {
             loadFragment(new MpFragment());
             getSupportActionBar().setTitle("Map");
+            titleName = "Map";
             isSecondryFragmentsActive = true;
 
         }
@@ -215,6 +219,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             }
            // super.onBackPressed();
             loadFragment(new HomeFragment());
+            titleName = "Home";
             getSupportActionBar().setTitle("Home");
         }
 
@@ -243,5 +248,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(HomeActivity.this).unregisterReceiver(bgshowBroacast);
+
     }
 }
