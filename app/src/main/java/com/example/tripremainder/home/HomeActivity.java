@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Database;
 
 import com.example.tripremainder.DataBase.Model.NewTrip;
+import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.DataBase.RoomDB;
 import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.MpFragment;
@@ -46,11 +49,15 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
-    boolean isSecondryFragmentsActive;
+    static boolean isSecondryFragmentsActive = false;
     View headerView;
     TextView headerEmail;
     private FirebaseDatabase mFirebaseDatabase;
+    static String titleName = "Home";
+
     String email;
+    ArrayList<NewTrip> syncData = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +65,13 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setContentView(R.layout.activity_home);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle(titleName);
         navigationView = findViewById(R.id.nested);
         headerView = navigationView.getHeaderView(0);
         headerEmail = headerView.findViewById(R.id.UserEmail);
         navigationView.setNavigationItemSelectedListener(this);
 
-        isSecondryFragmentsActive = false;
+
 
         drawer = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
@@ -110,29 +117,58 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             loadFragment(new HomeFragment());
 
             getSupportActionBar().setTitle("UpComingTrips");
+            titleName = "UpComingTrips";
             isSecondryFragmentsActive = false;
 
         }
         if (menuItem.getItemId() == R.id.history) {
            loadFragment(new HistoryFragment());
             getSupportActionBar().setTitle("Trips History");
+            titleName = "Trips History";
             isSecondryFragmentsActive = true;
 
         }
         if (menuItem.getItemId() == R.id.map) {
             loadFragment(new MpFragment());
             getSupportActionBar().setTitle("Map");
+            titleName = "Map";
             isSecondryFragmentsActive = true;
 
         }
         if(menuItem.getItemId() == R.id.sync){
             FIreBaseConnection con = new FIreBaseConnection();
+            Handler handler;
+            RoomDB databse =  RoomDB.getInstance(HomeActivity.this);
+            databse.tripDaos().deleteAll(email);
+            handler = new Handler(){
+                @Override
+                public void handleMessage(@NonNull Message msg) {
 
-            ArrayList<NewTrip> syncData  = con.getTripsFromFireBase();
-            RoomDB databse =  RoomDB.getInstance(this);
-            for(NewTrip item:syncData){
-                databse.tripDaos().insertTrip( item);
-            }
+                    ArrayList<NewTrip> finalSyncData = syncData;
+                    for(NewTrip item: finalSyncData){
+                        NewTrip tempTrip = new NewTrip();
+                        tempTrip.setTripName(item.getTripName());
+                        tempTrip.setTripDate(item.getTripDate());
+                        tempTrip.setTripBackDate(item.getTripBackDate());
+                        tempTrip.setTripTime(item.getTripBackDate());
+                        tempTrip.setTripBackTime(item.getTripBackTime());
+                        tempTrip.setEmail(item.getEmail());
+                        tempTrip.setDirection(item.getDirection());
+                        tempTrip.setEndPoint(item.getEndPoint());
+                        tempTrip.setStartPoint(item.getStartPoint());
+                        tempTrip.setEndPointlat(item.getEndPointlat());
+                        tempTrip.setEndPointLong(item.getEndPointLong());
+                        tempTrip.setStartPointlat(item.getStartPointlat());
+                        tempTrip.setState(item.getState());
+                        tempTrip.setStartPointLong(item.getStartPointLong());
+                        tempTrip.setStateType(item.getStateType());
+                        databse.tripDaos().insertTrip(tempTrip);
+                    }
+                }
+
+            };
+            syncData = con.getTripsFromFireBase(handler);
+
 
         }
 
@@ -183,6 +219,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             }
            // super.onBackPressed();
             loadFragment(new HomeFragment());
+            titleName = "Home";
             getSupportActionBar().setTitle("Home");
         }
 
@@ -211,5 +248,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(HomeActivity.this).unregisterReceiver(bgshowBroacast);
+
     }
 }

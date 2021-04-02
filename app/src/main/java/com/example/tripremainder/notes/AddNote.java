@@ -17,10 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.tripremainder.Connectivity.Connectivity;
+import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
+import com.example.tripremainder.home.HomeFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +84,16 @@ public class AddNote extends AppCompatActivity {
                     database.noteDao().insertNote(note);
                     dataList.clear();
                     dataList.addAll(database.noteDao().getAllNotes(note.getTripId()));
+                    try {
+                        HomeFragment.isSyncNeeded = !Connectivity.checkConnection();
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(!HomeFragment.isSyncNeeded) {
+                        ArrayList<NoteModel> notes = (ArrayList<NoteModel>) database.noteDao().getAllNotes(note.getTripId());
+                        FIreBaseConnection connection= new FIreBaseConnection();
+                        connection.addNotes(notes);
+                    }
                     adapter = new NoteAdapter(dataList,AddNote.this);
                     recyclerView.setAdapter(adapter);
                     editText.setText("");
@@ -117,10 +132,21 @@ public class AddNote extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NoteModel d = dataList.get(viewHolder.getAdapterPosition());
+                            try {
+                                HomeFragment.isSyncNeeded = !Connectivity.checkConnection();
+                            } catch (IOException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if(!HomeFragment.isSyncNeeded) {
+
+                                FIreBaseConnection connection = new FIreBaseConnection();
+                                connection.removeNote(d);
+                            }
                             database.noteDao().delete(d);
                             dataList.remove(viewHolder.getAdapterPosition());
                             adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                             adapter.notifyItemRangeChanged(viewHolder.getAdapterPosition(),dataList.size());
+
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

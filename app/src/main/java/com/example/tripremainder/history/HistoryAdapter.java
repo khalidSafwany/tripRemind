@@ -16,15 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tripremainder.Connectivity.Connectivity;
 import com.example.tripremainder.DataBase.Model.NewTrip;
 import com.example.tripremainder.DataBase.Model.NoteModel;
 import com.example.tripremainder.DataBase.RoomDB;
+import com.example.tripremainder.FIreBaseConnection;
 import com.example.tripremainder.R;
 import com.example.tripremainder.auth.Sign_inActivity;
 import com.example.tripremainder.home.HomeActivity;
+import com.example.tripremainder.home.HomeFragment;
 import com.example.tripremainder.home.details.DetailsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
@@ -91,8 +95,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         NewTrip trip = tripList.get(position);
+                        try {
+                            HomeFragment.isSyncNeeded = !Connectivity.checkConnection();
+                        } catch (IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if(!HomeFragment.isSyncNeeded) {
+
+                            FIreBaseConnection connection = new FIreBaseConnection();
+                            connection.deleteTrip(trip.getId());
+                        }
                         database.tripDaos().delete(trip);
                         tripList.remove(position);
+
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position,tripList.size());
                     }

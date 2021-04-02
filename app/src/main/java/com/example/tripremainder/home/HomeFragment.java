@@ -48,12 +48,13 @@ public class HomeFragment extends Fragment {
     RoomDB database;
     private List<NewTrip> tripList;
 
+
     // The Entry point of the database
     private FirebaseDatabase mFirebaseDatabase;
 
     String email;
 
-    private static boolean isSyncNeeded = false;
+    public static boolean isSyncNeeded = false;
     private final static String isSyncNeededString = "sync";
 
 void SyncData(){
@@ -67,7 +68,7 @@ void SyncData(){
     ArrayList<NewTrip>comingTrips = (ArrayList<NewTrip>) databaseConnection.tripDaos().getUpcomingTrips();
     ArrayList<NewTrip>HistoryTrips = (ArrayList<NewTrip>) databaseConnection.tripDaos().getHistoryTrips();
     FIreBaseConnection fIreBaseConnection = new FIreBaseConnection();
-    fIreBaseConnection.syncFullData(comingTrips, HistoryTrips);
+    fIreBaseConnection.syncFullData(comingTrips, HistoryTrips,getContext());
     isSyncNeeded = false;
     dialog.dismiss();
 
@@ -216,5 +217,9 @@ void SyncData(){
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+    }
 }
